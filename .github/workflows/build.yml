@@ -1,0 +1,30 @@
+name: Build portfolio
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'template.html'
+      - 'build_portfolio.py'
+      - '_*.js'
+      - '_*.css'
+      - 'guestbook.config.json'
+      - 'assets/**'
+      - 'media/**'
+      - 'project-assets/**'
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python build_portfolio.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-dist
+          path: dist
