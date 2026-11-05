@@ -24,39 +24,38 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Verify parts and safely extract source
+      - name: Download the approved source and safely extract it
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path, PurePosixPath
-          import hashlib, json, os, re, stat, zipfile
+          import hashlib, json, os, stat, urllib.request, zipfile
           root = Path.cwd().resolve()
-          manifest_path = root/'portfolio-upload.json'
-          if not manifest_path.is_file():
-              raise SystemExit('No upload manifest exists. This one-time import has already run, or the upload is incomplete.')
-          manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+          expected_sha = 'cb7088268a7143760cb2144c4f2ba29563efc56c4465e855f7e3c25cf2f7d978'
+          source_url = 'https://jiale-shen-portfolio.surge.sh/portfolio-source.zip'
+          manifest_url = 'https://jiale-shen-portfolio.surge.sh/portfolio-source.json'
+          request = urllib.request.Request(manifest_url, headers={'Cache-Control':'no-cache','User-Agent':'portfolio-source-import'})
+          with urllib.request.urlopen(request, timeout=60) as response:
+              raw_manifest = response.read(262145)
+          assert len(raw_manifest) <= 262144, 'Manifest is unexpectedly large'
+          manifest = json.loads(raw_manifest)
           assert manifest['format'] == 1
-          parts = manifest['parts']
-          assert 1 <= len(parts) <= 64
-          names = [item['name'] for item in parts]
-          assert names == [f'portfolio-upload.part{i:03d}' for i in range(1,len(parts)+1)]
-          assert sorted(p.name for p in root.glob('portfolio-upload.part*')) == names, 'Unexpected or missing upload part'
+          assert manifest['archive_sha256'] == expected_sha, 'Manifest does not describe the approved source'
+          assert manifest['files'] == 140
+          assert 0 < manifest['archive_bytes'] < 1024*1024*1024
           archive = Path(os.environ['RUNNER_TEMP'])/'portfolio-source.zip'
           archive_digest = hashlib.sha256()
           total = 0
-          with archive.open('wb') as output:
-              for item in parts:
-                  source = root/item['name']
-                  assert source.parent == root and not source.is_symlink()
-                  chunk = source.read_bytes()
-                  assert 0 < len(chunk) <= 20*1024*1024 and len(chunk) == item['bytes']
-                  assert hashlib.sha256(chunk).hexdigest() == item['sha256'], item['name']
+          request = urllib.request.Request(source_url, headers={'Cache-Control':'no-cache','User-Agent':'portfolio-source-import'})
+          with urllib.request.urlopen(request, timeout=120) as response, archive.open('wb') as output:
+              while chunk := response.read(1024*1024):
                   output.write(chunk); archive_digest.update(chunk); total += len(chunk)
+                  assert total <= manifest['archive_bytes'], 'Source download exceeds the approved size'
           assert total == manifest['archive_bytes']
-          assert archive_digest.hexdigest() == manifest['archive_sha256']
+          assert archive_digest.hexdigest() == expected_sha, 'Source checksum mismatch'
           with zipfile.ZipFile(archive) as z:
               entries = z.infolist()
-              assert len(entries) == manifest['files'] and len(entries) < 2000
+              assert len(entries) == manifest['files'] == 140
               assert sum(entry.file_size for entry in entries) == manifest['uncompressed_bytes']
               assert sum(entry.file_size for entry in entries) < 1024*1024*1024
               seen = set()
@@ -80,9 +79,11 @@ jobs:
                   destination.parent.mkdir(parents=True,exist_ok=True)
                   destination.write_bytes(z.read(entry))
           # Removals are committed only after the build step has succeeded.
-          for name in names: (root/name).unlink()
-          manifest_path.unlink()
-          print(f'Verified and extracted {len(entries)} source files from {len(parts)} parts.')
+          for old_part in root.glob('portfolio-upload.part[0-9][0-9][0-9]'):
+              if old_part.is_file(): old_part.unlink()
+          old_manifest = root/'portfolio-upload.json'
+          if old_manifest.is_file(): old_manifest.unlink()
+          print(f'Downloaded the approved ZIP and extracted {len(entries)} source files.')
           PY
 
       - name: Build before committing imported files
