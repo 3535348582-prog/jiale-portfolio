@@ -1,0 +1,108 @@
+/* Star fields sit behind text; moving gold is isolated to decorative layers. */
+:is(.ai-tool,.skill-card,.role-grid>article,.profile-summary,.education-aside,.experience-card,.qualification){
+  --panel-star-offset:0px 0px;
+  background-color:#0d1725;
+  background-image:
+    radial-gradient(ellipse at 94% 8%,rgba(98,137,174,.19),transparent 65%),
+    radial-gradient(circle at 89px 34px,rgba(214,229,243,.58) 0 .8px,transparent 1.5px),
+    radial-gradient(circle at 37px 92px,rgba(155,194,225,.38) 0 .65px,transparent 1.3px),
+    radial-gradient(circle at 153px 127px,rgba(241,211,151,.47) 0 .85px,transparent 1.65px),
+    linear-gradient(145deg,#111e2e,#0b1421);
+  background-size:auto,197px 181px,241px 227px,293px 263px,auto;
+  background-position:0 0,var(--panel-star-offset),var(--panel-star-offset),var(--panel-star-offset),0 0;
+  background-repeat:no-repeat,repeat,repeat,repeat,no-repeat;
+}
+:is(.ai-tool,.skill-card,.role-grid>article):nth-child(2n){--panel-star-offset:67px 41px}
+:is(.ai-tool,.skill-card,.role-grid>article):nth-child(3n){--panel-star-offset:123px 79px}
+.profile-summary{
+  background-image:
+    radial-gradient(ellipse at 96% 5%,rgba(98,137,174,.19),transparent 64%),
+    radial-gradient(circle at 89px 34px,rgba(214,229,243,.54) 0 .8px,transparent 1.5px),
+    radial-gradient(circle at 37px 92px,rgba(155,194,225,.35) 0 .65px,transparent 1.3px),
+    radial-gradient(circle at 153px 127px,rgba(241,211,151,.42) 0 .85px,transparent 1.65px),
+    linear-gradient(145deg,#0f2135,#0b1322);
+}
+@media(max-width:600px){
+  :is(.ai-tool,.skill-card,.role-grid>article,.profile-summary,.education-aside,.experience-card,.qualification){
+    background-size:auto,223px 207px,269px 251px,317px 293px,auto;
+  }
+}
+@media(forced-colors:active){
+  :is(.ai-tool,.skill-card,.role-grid>article,.profile-summary,.education-aside,.experience-card,.qualification){background-image:none}
+}
+
+.panel-gilded{position:relative;isolation:isolate;border-color:#85724d80}
+.panel-gold-edge,.panel-gold-wash{position:absolute;inset:0;border-radius:inherit;pointer-events:none;overflow:hidden}
+.panel-gold-edge{
+  z-index:2;padding:1px;
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+}
+.panel-gold-edge>span{
+  position:absolute;inset:0 -100%;
+  background:linear-gradient(112deg,transparent 22%,#a37c3124 31%,#d6ad65c9 38%,#fff0bdf2 42%,#c39b51a6 47%,transparent 57%);
+  animation:panel-gold-edge 8s ease-in-out infinite both;
+  animation-delay:var(--gold-delay,0s);animation-play-state:paused;
+}
+.panel-gold-wash{z-index:-1}
+.panel-gold-wash::before{
+  content:"";position:absolute;inset:0 -60%;
+  background:linear-gradient(112deg,transparent 26%,#c8983f08 35%,#f1cf7930 44%,#c6933517 50%,transparent 61%);
+  animation:panel-gold-wash 8s ease-in-out infinite both;
+  animation-delay:var(--gold-delay,0s);animation-play-state:paused;
+}
+.panel-gilded.is-gold-visible>.panel-gold-edge>span,
+.panel-gilded.is-gold-visible>.panel-gold-wash::before{animation-play-state:running}
+@keyframes panel-gold-edge{
+  0%,12%{transform:translateX(-36%);opacity:.18}
+  38%,62%{opacity:1}
+  88%,100%{transform:translateX(36%);opacity:.18}
+}
+@keyframes panel-gold-wash{
+  0%,12%{transform:translateX(-45%);opacity:0}
+  40%,58%{opacity:1}
+  88%,100%{transform:translateX(45%);opacity:0}
+}
+@media(prefers-reduced-motion:reduce){
+  .panel-gold-edge>span{animation:none;transform:translateX(10%);opacity:.55}
+  .panel-gold-wash::before{animation:none;transform:none;opacity:.18}
+}
+@media(forced-colors:active){.panel-gold-edge,.panel-gold-wash{display:none}}
+
+/* Every named chart has a reserved footer; it never overlaps body copy. */
+.panel-star-interaction{
+  position:relative;display:block;height:72px;min-height:72px;box-sizing:border-box;
+  flex:0 0 72px;align-self:stretch;margin:16px 0 0;padding:8px 0 0;
+  border-top:1px solid #b99a5c29;overflow:hidden;
+  pointer-events:none;
+}
+.panel-star-scout{
+  position:relative;display:grid;grid-template-columns:82px minmax(0,1fr);gap:12px;
+  align-items:center;width:100%;height:100%;pointer-events:none;
+  background:radial-gradient(ellipse at 12% 50%,#efd39b15,transparent 66%);
+}
+.panel-star-scout svg{display:block;width:82px;height:61px;overflow:visible}
+.panel-star-scout polyline{fill:none;stroke:#f0cf8b;stroke-width:.65;stroke-opacity:.64;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.3s ease .12s}
+.panel-star-scout circle{fill:#ffe8ba;fill-opacity:.9;opacity:0;transition:opacity .7s ease .12s}
+.panel-constellation-name{position:static;display:block;min-width:0;font:10px/1.6 Consolas,"Microsoft YaHei",monospace;letter-spacing:.5px;color:#d6c18f;opacity:0;transition:opacity .9s ease .45s;white-space:normal;overflow-wrap:anywhere}
+.panel-constellation.is-star-active>.panel-star-interaction .panel-star-scout polyline{stroke-dashoffset:0}
+.panel-constellation.is-star-active>.panel-star-interaction .panel-star-scout circle{opacity:1}
+.panel-constellation.is-star-active>.panel-star-interaction .panel-constellation-name{opacity:.72}
+.panel-star-scout path{fill:none;stroke:#fff0ce;stroke-width:.75;stroke-opacity:.8}
+.panel-gilded.is-star-active{border-color:#d6b878;box-shadow:inset 0 0 22px #d7b76c0b,0 0 16px #d7b76c14}
+.panel-gilded.is-star-active>.panel-gold-edge{filter:brightness(1.3)}
+.case-card>.panel-star-interaction{margin:0 22px 12px;width:calc(100% - 44px)}
+.ai-lab>.panel-star-interaction{height:48px;min-height:48px;flex-basis:48px;margin-top:12px;padding-top:5px}
+.ai-lab>.panel-star-interaction .panel-star-scout{grid-template-columns:52px minmax(0,1fr)}
+.ai-lab>.panel-star-interaction svg{width:52px;height:41px}
+@media(max-width:600px){
+  .panel-star-scout{grid-template-columns:70px minmax(0,1fr);gap:8px}
+  .panel-star-scout svg{width:70px}
+  .panel-constellation-name{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+  .panel-star-interaction,.panel-star-scout,.panel-star-scout polyline,.panel-star-scout circle,.panel-constellation-name{transition:none}
+}
+@media(forced-colors:active){.panel-star-interaction{display:none}}

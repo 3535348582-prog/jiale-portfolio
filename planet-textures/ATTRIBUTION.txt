@@ -1,0 +1,6 @@
+Planet textures by Solar System Scope / INOVE, licensed CC BY 4.0.
+Original source: https://www.solarsystemscope.com/textures/
+License: https://creativecommons.org/licenses/by/4.0/
+Maps are based on NASA data, with provider-enhanced colors and some fictional fill in unmapped regions.
+Downloaded from public mirrors Sanghel/solar-system-3d and TanvirAhmedArnab/SolarSystem.
+Original downloads preserved; Earth specular map also provided as a lossless PNG for web rendering.

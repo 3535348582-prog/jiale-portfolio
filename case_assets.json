@@ -1,0 +1,186 @@
+{
+  "box-cover": {
+    "file": "box-cover.jpg",
+    "mime": "image/jpeg"
+  },
+  "box-field": {
+    "file": "box-field.jpg",
+    "mime": "image/jpeg"
+  },
+  "box-bound": {
+    "file": "box-bound.jpg",
+    "mime": "image/jpeg"
+  },
+  "box-closing": {
+    "file": "box-closing.jpg",
+    "mime": "image/jpeg"
+  },
+  "pet-cover": {
+    "file": "pet-cover.jpg",
+    "mime": "image/jpeg"
+  },
+  "pet-actions": {
+    "file": "pet-actions.jpg",
+    "mime": "image/jpeg"
+  },
+  "pet-look": {
+    "file": "pet-look.png",
+    "mime": "image/png"
+  },
+  "heritage-figures": {
+    "file": "heritage-figures.jpg",
+    "mime": "image/jpeg"
+  },
+  "pga-layout": {
+    "file": "pga-layout.jpg",
+    "mime": "image/jpeg"
+  },
+  "pga-schematic": {
+    "file": "pga-schematic.jpg",
+    "mime": "image/jpeg"
+  },
+  "pga-ac": {
+    "file": "pga-ac.jpg",
+    "mime": "image/jpeg"
+  },
+  "analog-opamp": {
+    "file": "analog-opamp.jpg",
+    "mime": "image/jpeg"
+  },
+  "analog-reference": {
+    "file": "analog-reference.jpg",
+    "mime": "image/jpeg"
+  },
+  "embedded-app": {
+    "file": "embedded-app.jpg",
+    "mime": "image/jpeg"
+  },
+  "embedded-unlock": {
+    "file": "embedded-unlock.jpg",
+    "mime": "image/jpeg"
+  },
+  "notion-workflow": {
+    "file": "notion-workflow.svg",
+    "mime": "image/svg+xml"
+  },
+  "radio-flow": {
+    "file": "radio-flow.svg",
+    "mime": "image/svg+xml"
+  },
+  "embedded-demo-unlock": {
+    "file": "frame-unlock.jpg",
+    "mime": "image/jpeg"
+  },
+  "embedded-demo-gallery": {
+    "file": "frame-gallery.jpg",
+    "mime": "image/jpeg"
+  },
+  "embedded-demo-music": {
+    "file": "frame-music.jpg",
+    "mime": "image/jpeg"
+  },
+  "embedded-demo-video": {
+    "file": "frame-video.jpg",
+    "mime": "image/jpeg"
+  },
+  "embedded-demo-poster": {
+    "file": "poster.jpg",
+    "mime": "image/jpeg"
+  },
+  "heritage-poster": {
+    "file": "heritage-poster.jpg",
+    "mime": "image/jpeg"
+  },
+  "heritage-interview": {
+    "file": "heritage-interview.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-uk-01": {
+    "file": "uk-01.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-uk-02": {
+    "file": "uk-02.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-au-01": {
+    "file": "au-01.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-au-02": {
+    "file": "au-02.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-au-03": {
+    "file": "au-03.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-au-04": {
+    "file": "au-04.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-au-05": {
+    "file": "au-05.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-au-06": {
+    "file": "au-06.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-sg-01": {
+    "file": "sg-01.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-sg-02": {
+    "file": "sg-02.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-sg-03": {
+    "file": "sg-03.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-sg-04": {
+    "file": "sg-04.jpg",
+    "mime": "image/jpeg"
+  },
+  "album-sg-05": {
+    "file": "sg-05.jpg",
+    "mime": "image/jpeg"
+  },
+  "certificate-01": {
+    "file": "award-01.jpg",
+    "mime": "image/jpeg"
+  },
+  "certificate-02": {
+    "file": "award-02.jpg",
+    "mime": "image/jpeg"
+  },
+  "certificate-03": {
+    "file": "award-03.jpg",
+    "mime": "image/jpeg"
+  },
+  "certificate-04": {
+    "file": "award-04.jpg",
+    "mime": "image/jpeg"
+  },
+  "certificate-05": {
+    "file": "award-05.jpg",
+    "mime": "image/jpeg"
+  },
+  "certificate-06": {
+    "file": "award-06.jpg",
+    "mime": "image/jpeg"
+  },
+  "certificate-07": {
+    "file": "award-07.jpg",
+    "mime": "image/jpeg"
+  },
+  "new-video-poster": {
+    "file": "new-video-poster.jpg",
+    "mime": "image/jpeg"
+  },
+  "ubt-poster": {
+    "file": "ubt-poster.jpg",
+    "mime": "image/jpeg"
+  }
+}

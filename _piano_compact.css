@@ -1,0 +1,63 @@
+/* Only this vignette is scoped; original music/piano synthesis is untouched. */
+body.piano-compact-mounted{padding-bottom:56px!important}
+#pianoRail.piano-compact{left:auto!important;right:18px!important;bottom:12px!important;width:min(600px,calc(100vw - 32px))!important;height:auto!important;aspect-ratio:600/320!important;min-height:0!important;max-height:none!important;border:0!important;background:transparent!important;box-shadow:none!important;pointer-events:none;overflow:visible!important;contain:layout style;z-index:72}
+#pianoRail.piano-compact .pr-body{position:absolute;inset:0;width:100%;height:100%;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;pointer-events:auto;transition:opacity .25s,transform .35s;overflow:visible!important}
+#pianoRail.piano-compact .pr-stage{position:absolute;inset:0;overflow:visible!important;background:linear-gradient(180deg,transparent 38%,#03091070 90%,transparent)!important;border:0!important}
+#pianoRail.piano-compact .pr-stage:before,#pianoRail.piano-compact .pr-stage:after{display:none!important}
+#pianoRail.piano-compact .pr-rig,#pianoRail.piano-compact .pr-bench,#pianoRail.piano-compact .pr-piano,#pianoRail.piano-compact .pr-spot,#pianoRail.piano-compact .pr-fill,#pianoRail.piano-compact .pr-progress-glow,#pianoRail.piano-compact .pr-grab,#pianoRail.piano-compact .pr-tip{display:none!important}
+#pianoRail.piano-compact .cp-scene{position:absolute;left:0;top:0;width:600px;height:320px;transform:scale(var(--cp-scale,1));transform-origin:0 0;pointer-events:none}
+#pianoRail.piano-compact .cp-leo-emblem{opacity:.56;pointer-events:none;transition:opacity .4s ease}
+#pianoRail.piano-compact .cp-leo-label{font-family:Consolas,"Microsoft YaHei",monospace;letter-spacing:.7px}
+#pianoRail.piano-compact:hover .cp-leo-emblem,#pianoRail.piano-compact.cp-playing .cp-leo-emblem{opacity:.85}
+@media(prefers-reduced-motion:reduce){#pianoRail.piano-compact .cp-leo-emblem{transition:none}}
+#pianoRail.piano-compact .cp-illustration{position:absolute;inset:0;width:600px;height:320px;overflow:visible;pointer-events:none}
+#pianoRail.piano-compact .pr-keys{left:146px!important;top:180px!important;right:auto!important;bottom:auto!important;width:260px!important;height:20px!important;transform:matrix(1,-.12,.5,.8,0,0)!important;transform-origin:0 0!important;z-index:3!important;border-top:1px solid #344550!important;border-bottom:1px solid #000!important;box-shadow:none!important;overflow:hidden;pointer-events:auto!important;will-change:auto!important}
+#pianoRail.piano-compact .pr-key{border-radius:0!important;box-shadow:inset -1px 0 #6e716955!important}
+#pianoRail.piano-compact .pr-key.black{box-shadow:1px 2px 1px #0008!important}
+#pianoRail.piano-compact .pr-hud{left:auto!important;right:3px!important;top:0!important;bottom:auto!important;height:26px!important;display:flex!important;gap:5px!important;align-items:center!important;padding:0!important;background:transparent!important;pointer-events:auto;z-index:20}
+#pianoRail.piano-compact .pr-label{display:none!important}
+#pianoRail.piano-compact .pr-time{font-size:9px!important;letter-spacing:.03em;color:#8aa7b8!important;margin-right:3px}
+#pianoRail.piano-compact .pr-hud button{width:25px!important;height:25px!important;border-radius:50%!important;background:#071420e8!important;border:1px solid #355266!important;font-size:11px!important;color:#accbda!important;box-shadow:none!important}
+#pianoRail.piano-compact .pr-hud button:hover{background:#143049!important;color:#fff!important}
+#pianoRail.piano-compact .pr-expand{right:0!important;left:auto!important;bottom:0!important;width:42px!important;height:42px!important;pointer-events:auto!important}
+#pianoRail.piano-compact.collapsed{width:44px!important;height:44px!important;aspect-ratio:auto!important}
+#pianoRail.piano-compact.collapsed .pr-body{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transform:translateY(15px) scale(.96)!important}
+#pianoRail.piano-compact:not(.collapsed) .pr-expand{display:none!important}
+#pianoRail.piano-compact .cp-finger{transform-box:fill-box;transform-origin:20% 20%;animation:none}
+#pianoRail.piano-compact.cp-playing .cp-arm-near .cp-finger{animation:cpNearKey 1.65s ease-in-out infinite}
+#pianoRail.piano-compact.cp-playing .cp-arm-far .cp-finger{animation:cpFarKey 1.9s ease-in-out infinite}
+#pianoRail.piano-compact .cp-finger-1{animation-delay:-.28s!important}
+#pianoRail.piano-compact .cp-finger-2{animation-delay:-.64s!important}
+#pianoRail.piano-compact .cp-finger-3{animation-delay:-1.05s!important}
+#pianoRail.piano-compact .cp-finger-4{animation-delay:-1.3s!important}
+#pianoRail.piano-compact .cp-finger-5{animation-delay:-1.5s!important}
+#pianoRail.piano-compact[data-cp-touch="near"] .cp-arm-near .cp-finger,#pianoRail.piano-compact[data-cp-touch="far"] .cp-arm-far .cp-finger{animation-duration:.35s!important}
+@keyframes cpNearKey{0%,25%,70%,100%{transform:rotate(-1deg)}40%,55%{transform:rotate(1.5deg)}}
+@keyframes cpFarKey{0%,30%,75%,100%{transform:rotate(.6deg)}48%,60%{transform:rotate(-1.3deg)}}
+@media(max-width:760px){body.piano-compact-mounted{padding-bottom:200px!important}#pianoRail.piano-compact{right:8px!important;bottom:8px!important;width:min(480px,calc(100vw - 16px))!important}#pianoRail.piano-compact .pr-hud{right:3px!important;top:-4px!important}#pianoRail.piano-compact .pr-hud button{width:24px!important;height:24px!important}#pianoRail.piano-compact .pr-time{font-size:8px!important}}
+@media(prefers-reduced-motion:reduce){#pianoRail.piano-compact .cp-finger{animation:none!important}}
+
+/* Refined hand artwork: no polygon outlines, no keybed occlusion. */
+#pianoRail.piano-compact .cp-arm{display:none!important}
+#pianoRail.piano-compact .cp-refined-hands{position:absolute;inset:0;width:600px;height:320px;overflow:visible;pointer-events:none;z-index:4}
+/* Floating controls have distinct 48px targets and 20px vertical gaps. */
+body.piano-compact-mounted #motionToggle,body.piano-compact-mounted #backToTop{right:18px;width:48px;height:48px}
+body.piano-compact-mounted #motionToggle{bottom:calc(82px + env(safe-area-inset-bottom,0px))}
+body.piano-compact-mounted #backToTop{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+body.piano-compact-mounted #pianoRail.piano-compact.collapsed{right:18px!important;bottom:calc(14px + env(safe-area-inset-bottom,0px))!important;width:48px!important;height:48px!important}
+body.piano-compact-mounted #pianoRail.piano-compact .pr-expand{top:auto!important;bottom:0!important;right:0!important;width:48px!important;height:48px!important;font-size:18px!important}
+body.piano-compact-mounted #motionToggle:focus-visible,body.piano-compact-mounted #backToTop:focus-visible,body.piano-compact-mounted #pianoRail .pr-expand:focus-visible{outline:2px solid #a6e8ff;outline-offset:4px}
+/* Keep black keys shorter than whites at every responsive breakpoint. */
+#pianoRail.piano-compact .pr-key{height:100%!important;top:0!important;bottom:auto!important}
+#pianoRail.piano-compact .pr-key.black{height:62%!important}
+#pianoRail.piano-compact:not(.collapsed) .pr-body{opacity:var(--cp-reading-opacity,1);transition:opacity .48s ease,transform .48s ease}
+#pianoRail.piano-compact.cp-fading .pr-body{opacity:0!important;pointer-events:none!important}
+
+/* Reading keeps a small music entry; only an explicit expansion covers content. */
+@media(max-width:760px){
+  body.piano-compact-mounted{padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))!important}
+  #pianoRail.piano-compact .pr-hud{top:-46px!important;gap:8px!important}
+  #pianoRail.piano-compact .pr-hud button{width:44px!important;height:44px!important;font-size:15px!important}
+  #pianoRail.piano-compact .pr-time{font-size:10px!important}
+}
+@media(prefers-reduced-motion:reduce){#pianoRail.piano-compact .pr-body{transition:none!important}}

@@ -1,0 +1,28 @@
+.mobile-menu-toggle{display:none}
+@media(min-width:761px){.cosmic-hero .orbit-footer{bottom:24px!important}}
+@media(max-width:1100px){
+  header.mobile-nav-ready .nav{min-height:64px;position:relative;justify-content:space-between;overflow:visible}
+  header.mobile-nav-ready .mobile-menu-toggle{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:84px;min-height:44px;border:1px solid #46657f;background:#0a1624;color:#dfeaf6;font:14px var(--sans);cursor:pointer}
+  header.mobile-nav-ready .navlinks{display:none!important}
+  header.mobile-nav-ready.mobile-nav-open{z-index:150}
+  header.mobile-nav-ready.mobile-nav-open .navlinks{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));position:absolute;top:100%;left:0;right:0;width:auto;max-height:calc(100svh - 80px);overflow:auto;gap:6px;padding:14px;background:#0a1422;border:1px solid #344b60;box-shadow:0 16px 32px #0006}
+  header.mobile-nav-ready .navlinks a,header.mobile-nav-ready .navlinks .lang-toggle{display:flex!important;align-items:center;min-height:44px;white-space:normal;font-size:14px!important;padding:8px 12px;box-sizing:border-box}
+  header.mobile-nav-ready .navlinks a:hover{background:#162738}
+  header.mobile-nav-ready :is(a,button):focus-visible{outline:2px solid #a6e8ff;outline-offset:3px}
+}
+@media(max-width:760px){
+  .space-intro{font-size:15px!important;line-height:1.85!important;max-width:none!important}
+  .space-name{font-size:16px!important}
+  .space-actions{gap:12px!important;flex-wrap:wrap!important}
+  .space-actions a{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box;font-size:14px!important}
+  .role-badges span{font-size:11px!important}
+  .section :is(.section-lead,.skill-card li,.skill-card p,.role-grid p,.profile-summary p,.card-main p,.qualification,.qualification span,.timeline-item p,.ai-tool p){font-size:14px!important;line-height:1.8!important}
+  .section :is(.role-grid a,.details-btn){font-size:14px!important;min-height:44px;display:inline-flex;align-items:center}
+  .cosmic-hero .scene-clock{top:calc(416px + var(--mobile-copy-extra,0px))!important}
+  .cosmic-hero .solar-toolbar{top:calc(439px + var(--mobile-copy-extra,0px))!important}
+  .cosmic-hero .solar-instruction{top:calc(483px + var(--mobile-copy-extra,0px))!important}
+  .cosmic-hero .panel-toggle{top:calc(527px + var(--mobile-copy-extra,0px))!important}
+  .cosmic-hero .orbit-panel{top:calc(570px + var(--mobile-copy-extra,0px))!important}
+  .cosmic-hero .solar-toolbar button{min-height:44px;font-size:12px!important}
+  .cosmic-hero .solar-instruction{font-size:11px!important}
+}

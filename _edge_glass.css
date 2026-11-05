@@ -1,0 +1,12 @@
+/* A small optical meniscus follows the pointer, leaving page content clear. */
+#edgeGlass{position:fixed;inset:0;z-index:110;pointer-events:none!important;overflow:hidden;contain:strict}
+#edgeGlass .eg-lens{--eg-strength:0;--eg-stretch:.35;--eg-position:0px;position:absolute;display:block;box-sizing:border-box;pointer-events:none!important;opacity:var(--eg-strength);background:linear-gradient(130deg,#f4fdff16 0%,#c4e9ff08 38%,#c8efff03 62%,#e9faff12 100%);border:1px solid #e6faff40;box-shadow:inset 1px 0 2px #ffffff66,inset -2px 0 8px #a8cfe733,0 0 14px #b3e7ff0c;backdrop-filter:blur(9px) saturate(145%) brightness(1.06);-webkit-backdrop-filter:blur(9px) saturate(145%) brightness(1.06);will-change:transform,opacity}
+#edgeGlass .eg-lens:after{content:"";position:absolute;inset:2px;border-radius:inherit;background:linear-gradient(150deg,#ffffff36,transparent 28%,transparent 69%,#d7f4ff1c);opacity:.6}
+#edgeGlass .eg-left,#edgeGlass .eg-right{top:0;width:46px;height:220px;border-radius:50% / 24%;transform:translate3d(0,var(--eg-position),0) scaleX(var(--eg-stretch))}
+#edgeGlass .eg-left{left:-20px;transform-origin:left center}
+#edgeGlass .eg-right{right:-20px;transform-origin:right center;background:linear-gradient(230deg,#f4fdff16,#c4e9ff05 50%,#e9faff12)}
+#edgeGlass .eg-top,#edgeGlass .eg-bottom{left:0;width:220px;height:46px;border-radius:24% / 50%;transform:translate3d(var(--eg-position),0,0) scaleY(var(--eg-stretch))}
+#edgeGlass .eg-top{top:-20px;transform-origin:center top}
+#edgeGlass .eg-bottom{bottom:-20px;transform-origin:center bottom}
+html.pov-travelling #edgeGlass{visibility:hidden}
+@media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){#edgeGlass{display:none}}

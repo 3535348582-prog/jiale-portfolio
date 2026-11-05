@@ -1,0 +1,38 @@
+/* A static star field keeps the discussion readable and inexpensive to render. */
+.guestbook-section{position:relative;scroll-margin-top:90px;background:#08111d;border-top:1px solid #293e50;padding:76px 0;color:#dce8f4}
+.guestbook-heading{max-width:740px;margin-bottom:30px;position:relative;z-index:1}
+.guestbook-heading h2{margin:13px 0 16px;font-size:clamp(27px,3.4vw,40px);font-weight:400;line-height:1.45}
+.guestbook-heading p{color:#a6b8ca;font-size:15px;line-height:1.9;max-width:650px}
+.guestbook-shell{position:relative;padding:26px clamp(18px,3vw,36px);border:1px solid #34495c;border-radius:4px;background:radial-gradient(circle at 94% 7%,#d9c189 0 1px,transparent 1.7px),radial-gradient(circle at 86% 15%,#88b9cf 0 1px,transparent 1.7px),radial-gradient(circle at 96% 24%,#88b9cf 0 1px,transparent 1.7px),linear-gradient(135deg,#102031 0%,#0a1522 55%,#101b2a 100%);background-repeat:no-repeat}
+.guestbook-identity{border-bottom:1px solid #34485b;margin-bottom:20px;padding-bottom:18px}
+.guestbook-identity summary{display:flex;align-items:center;gap:12px;min-height:44px;width:fit-content;cursor:pointer;font-size:15px;color:#e4cc99;list-style:none}
+.guestbook-identity summary:before{content:'+';font:20px/1 Consolas,monospace;width:16px;color:#b9a276}
+.guestbook-identity[open] summary:before{content:'−'}
+.guestbook-identity summary small{color:#839eb4;font-size:12px}
+.guestbook-identity-body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px;align-items:center;padding:18px 0 8px}
+.guestbook-badge-preview{min-height:178px;display:flex;align-items:center;justify-content:center;border:1px solid #2a4255;background:#07121c;overflow:hidden;border-radius:3px}
+.guestbook-badge-preview svg{display:block;width:210px;height:174px;max-width:100%;color:#d7bd81}
+.guestbook-badge-preview .guestbook-unselected{font:12px/1.8 Consolas,"Microsoft YaHei",monospace;color:#8ba7bd;padding:18px;text-align:center}
+.guestbook-star-controls>label{display:block;font-size:13px;color:#a7bfd0;margin-bottom:8px}
+.guestbook-star-controls select{width:min(100%,380px);min-height:44px;background:#081523;color:#e0ebf7;border:1px solid #405a70;border-radius:3px;padding:8px 12px;font-size:15px;font-family:inherit}
+.guestbook-quiet{font-size:13px;line-height:1.8;color:#98adbf;margin:12px 0}
+.guestbook-actions,.guestbook-quiz-options{display:flex;gap:10px;flex-wrap:wrap}
+.guestbook-shell button{min-height:44px;padding:9px 16px;border:1px solid #486378;border-radius:3px;color:#cee8f5;background:#10263a;font:14px/1.5 var(--sans,"Microsoft YaHei",sans-serif);cursor:pointer;transition:background .2s,border-color .2s}
+.guestbook-shell button:hover{border-color:#c4ab74;background:#1b3040}
+.guestbook-shell button:disabled{cursor:default;opacity:.45}
+.guestbook-shell :is(button,a,select,textarea,summary):focus-visible{outline:2px solid #a6e8ff;outline-offset:4px}
+.guestbook-star-controls fieldset{margin:18px 0 0;border:1px solid #34495b;padding:14px}
+.guestbook-star-controls legend{font-size:13px;color:#b9cbd9;padding:0 6px}
+.guestbook-quiz-options button{font-size:13px;padding:8px 12px}
+.guestbook-copy-fallback label{display:block;font-size:13px;line-height:1.8;color:#a8bfd0;margin-top:15px}
+.guestbook-copy-fallback textarea{width:100%;box-sizing:border-box;background:#081523;border:1px solid #405a70;color:#d5e3ef;padding:10px;font:12px/1.7 Consolas,monospace;resize:vertical}
+.guestbook-comments-top{display:flex;justify-content:space-between;align-items:baseline;gap:15px;flex-wrap:wrap;margin-bottom:18px}
+.guestbook-comments-top p{font-size:13px;color:#a0b3c4;line-height:1.8;margin:0;max-width:590px}
+.guestbook-comments-top a{font-size:13px;color:#bfdbec;line-height:1.8;text-decoration:underline;text-underline-offset:4px}
+.guestbook-load-state{display:flex;gap:14px;align-items:center;flex-wrap:wrap;min-height:56px}
+.guestbook-load-state p{font-size:13px;color:#98b1c5;margin:0;line-height:1.8}
+.guestbook-load-state[hidden],.guestbook-shell [hidden]{display:none!important}
+.guestbook-shell .giscus{min-height:0;width:100%;margin-top:8px}
+.guestbook-shell .giscus-frame{display:block;width:100%;border:0;color-scheme:dark}
+@media(max-width:760px){.guestbook-section{padding:54px 0;scroll-margin-top:78px}.guestbook-shell{padding:18px 16px}.guestbook-identity-body{grid-template-columns:1fr;gap:18px}.guestbook-badge-preview{width:220px;max-width:100%;margin:0 auto}.guestbook-comments-top{gap:10px}.guestbook-shell .guestbook-comments-top p,.guestbook-quiet{font-size:14px}.guestbook-star-controls select{width:100%}}
+@media(prefers-reduced-motion:reduce){.guestbook-shell button{transition:none}}

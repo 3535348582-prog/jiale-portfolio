@@ -1,0 +1,211 @@
+{
+  "countries": [
+    "新加坡",
+    "英国",
+    "澳大利亚"
+  ],
+  "photos": [
+    {
+      "asset": "album-uk-01",
+      "title": "摩天轮与天空",
+      "caption": "摩天轮与天空",
+      "country": "uk",
+      "en": {
+        "title": "Observation wheel against the sky",
+        "caption": "Observation wheel against the sky"
+      }
+    },
+    {
+      "asset": "album-uk-02",
+      "title": "田野与云",
+      "caption": "田野与云",
+      "country": "uk",
+      "en": {
+        "title": "Countryside beneath the clouds",
+        "caption": "Countryside beneath the clouds"
+      }
+    },
+    {
+      "asset": "album-au-01",
+      "title": "悉尼歌剧院",
+      "caption": "悉尼歌剧院",
+      "country": "australia",
+      "en": {
+        "title": "Sydney Opera House",
+        "caption": "Sydney Opera House"
+      }
+    },
+    {
+      "asset": "album-au-02",
+      "title": "海岸与岩柱",
+      "caption": "海岸与岩柱",
+      "country": "australia",
+      "en": {
+        "title": "Coastline and sea stacks",
+        "caption": "Coastline and sea stacks"
+      }
+    },
+    {
+      "asset": "album-au-03",
+      "title": "历史建筑",
+      "caption": "历史建筑",
+      "country": "australia",
+      "en": {
+        "title": "A historic building",
+        "caption": "A historic building"
+      }
+    },
+    {
+      "asset": "album-au-04",
+      "title": "城市滨水风景",
+      "caption": "城市滨水风景",
+      "country": "australia",
+      "en": {
+        "title": "A waterfront skyline",
+        "caption": "A waterfront skyline"
+      }
+    },
+    {
+      "asset": "album-au-05",
+      "title": "海鸟",
+      "caption": "海鸟",
+      "country": "australia",
+      "en": {
+        "title": "Seabirds by the water",
+        "caption": "Seabirds by the water"
+      }
+    },
+    {
+      "asset": "album-au-06",
+      "title": "海岸旅行留影",
+      "caption": "海岸旅行留影",
+      "country": "australia",
+      "en": {
+        "title": "A moment on the coast",
+        "caption": "A moment on the coast"
+      }
+    },
+    {
+      "asset": "album-sg-01",
+      "title": "河畔的晚霞",
+      "caption": "河畔的晚霞",
+      "country": "singapore",
+      "en": {
+        "title": "A riverside evening",
+        "caption": "A riverside evening"
+      }
+    },
+    {
+      "asset": "album-sg-02",
+      "title": "议会大厦标志",
+      "caption": "议会大厦标志",
+      "country": "singapore",
+      "en": {
+        "title": "Singapore Parliament sign",
+        "caption": "Singapore Parliament sign"
+      }
+    },
+    {
+      "asset": "album-sg-03",
+      "title": "城市与绿植",
+      "caption": "城市与绿植",
+      "country": "singapore",
+      "en": {
+        "title": "Architecture and greenery",
+        "caption": "Architecture and greenery"
+      }
+    },
+    {
+      "asset": "album-sg-04",
+      "title": "历史建筑",
+      "caption": "历史建筑",
+      "country": "singapore",
+      "en": {
+        "title": "A historic building",
+        "caption": "A historic building"
+      }
+    },
+    {
+      "asset": "album-sg-05",
+      "title": "室内花园",
+      "caption": "室内花园",
+      "country": "singapore",
+      "en": {
+        "title": "An indoor garden",
+        "caption": "An indoor garden"
+      }
+    }
+  ],
+  "internships": [
+    {
+      "company": "上海归墟机器人",
+      "english": "Shanghai Robogo Technology Co., Ltd.",
+      "role": "硬件测试实习生",
+      "dates": "2026.01.26 — 2026.04.26",
+      "period": "3个月",
+      "periodLabel": "证明所载实习期",
+      "context": "硬件测试部门：配合机器人硬件产品的基础装配、调试与功能验证。",
+      "work": "参与组装、焊接和基础调试；协助嵌入式软件工程师验证模块功能，协助编写硬件测试报告并配合解决方案验证。",
+      "result": "协助形成测试报告与验证反馈，完成基础调试任务。",
+      "note": "资料依据：硬件测试部门实习证明。",
+      "type": "Hardware Testing",
+      "en": {
+        "company": "Shanghai Robogo Technology Co., Ltd.",
+        "role": "Hardware Testing Intern",
+        "period": "3 months",
+        "periodLabel": "internship period on certificate",
+        "context": "Supported basic assembly, debugging and functional verification in the hardware testing department.",
+        "work": "Participated in assembly, soldering and basic debugging; assisted embedded software engineers with module functional checks, helped prepare hardware test reports and supported validation of solutions.",
+        "result": "Contributed to test reports and verification feedback and performed basic debugging tasks.",
+        "note": "Based on the hardware testing internship certificate."
+      }
+    },
+    {
+      "company": "深圳市优必选科技股份有限公司",
+      "english": "UBTECH Robotics Corp Ltd.",
+      "role": "企业文化组 · 新媒体运营实习生",
+      "dates": "2025.07.28 — 2025.08.29",
+      "period": "2条",
+      "periodLabel": "按时保质交付短视频",
+      "context": "企业文化组的新媒体日常运营，需要按岗位要求持续产出短视频内容。",
+      "work": "围绕岗位要求推进短视频内容创作，关注制作细节与交付节奏，支持团队新媒体日常运营。",
+      "result": "按时保质交付2条短视频，实习证明明确记录内容产出与执行表现。",
+      "note": "日期、岗位及2条视频产出依据2025.08.29实习证明。",
+      "type": "Marketing & Content",
+      "en": {
+        "company": "UBTECH Robotics Corp Ltd.",
+        "role": "New Media Operations Intern · Corporate Culture Team",
+        "period": "2 videos",
+        "periodLabel": "delivered on time",
+        "context": "Supported the corporate culture team’s day-to-day new media operations through short-form video content.",
+        "work": "Produced short-form video content according to role requirements, attending to detail and delivery schedules while supporting the team’s daily operations.",
+        "result": "Delivered two short videos on time to the required quality; this output is recorded in the internship certificate.",
+        "note": "Dates, role and two-video output are documented in the internship certificate dated 29 August 2025."
+      }
+    },
+    {
+      "company": "北京铜牛信息科技 · 深圳分公司",
+      "english": "Beijing Tongniu Information Technology Co., Ltd., Shenzhen Branch",
+      "role": "电子工程实习生 · 兼职",
+      "dates": "2025.06.02 — 2025.07.07",
+      "period": "36 天（含首尾，约 5 周）",
+      "periodLabel": "兼职日期跨度（含首尾）",
+      "context": "智能可穿戴产品相关的电子工程基础实践。",
+      "work": "参与基础硬件组装、焊接、调试及功能测试，协助工程师记录问题与验证处理方案。",
+      "result": "参与产品测试与问题反馈，建立从实物操作到工程协作的基础认识。",
+      "note": "资料依据：本人确认的学校提交记录（兼职）。",
+      "type": "Electronics Engineering",
+      "en": {
+        "company": "Beijing Tongniu Information Technology Co., Ltd., Shenzhen Branch",
+        "role": "Electronics Engineering Intern · Part-time",
+        "period": "36 days (inclusive, ~5 weeks)",
+        "periodLabel": "calendar span, inclusive",
+        "context": "Introductory electronics engineering practice related to smart wearable products.",
+        "work": "Participated in basic hardware assembly, soldering, debugging and functional testing; helped engineers document issues and verify solutions.",
+        "result": "Contributed to product testing and issue feedback, developing a foundation in hands-on work and engineering collaboration.",
+        "note": "Dates follow the part-time record confirmed in my school submission."
+      }
+    }
+  ],
+  "newTravelAdded": true
+}

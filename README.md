@@ -1,2 +1,40 @@
-# jiale-portfolio
-沈佳乐的星空交互式个人作品集 · 技术、内容与 AI 协作
+# 沈佳乐 · 星空个人作品集
+
+太阳系主题的交互式个人作品集，展示项目、教育、实习、视频作品、学习记录与旅行。以技术基础连接内容表达和 AI 协作。
+
+- 网站：[jiale-shen-portfolio.surge.sh](https://jiale-shen-portfolio.surge.sh/)
+- 作者：沈佳乐（Jiale Shen）
+- 主要技术：HTML、CSS、原生 JavaScript、Three.js、Web Audio、Canvas、Python
+
+## 本地运行
+
+安装 Python 3.10 或以上版本。构建和预览只使用 Python 标准库：
+
+```sh
+python build_portfolio.py
+python serve_range.py --port 8796 --bind 127.0.0.1
+```
+
+打开 <http://127.0.0.1:8796/>。请使用仓库内的预览服务，以支持视频快进、后退和跨片段定位。
+
+## 功能
+
+- 太阳系导航与虫洞穿越、星际抽卡和第一人称吸入过渡
+- 紧凑钢琴、音乐控制，以及随阅读收起的浮层
+- 信息卡片的星座连线、鎏金反馈和液态玻璃边缘交互
+- 项目分工、成果、证据与独立的视频播放器
+- 手机折叠菜单、双语文案和减少动画偏好
+
+留言区通过 GitHub Discussions 保存公开评论，支持回复、@ 和表情回应；发表评论需要登录 GitHub。星座徽章选择与签名入口沿用网站的星空主题，具体配置见 `guestbook.config.json`。
+
+## 结构与维护
+
+`template.html` 是主页面模板；各 `_*.css` / `_*.js` 文件是构建时注入的功能模块。`build_portfolio.py` 生成 `dist/`，所有构建输入均位于本仓库，未依赖作者电脑上的绝对路径。
+
+`media/` 保存网页播放版本；`project-assets/` 保存项目证据与图片；`planet-textures/` 保存纹理及来源说明。`dist/` 由构建生成，不提交到 Git；GitHub Actions 会提供可下载的静态站点产物。高清原始视频、临时文件、个人日程和账号凭据不包含在仓库中。
+
+作者确定内容、视觉方向、交互要求与验收标准；AI 辅助实现、素材整理和调试。各项目页另行说明个人职责，团队成果不等同于独立完成。
+
+## 素材与使用范围
+
+请阅读 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。本仓库未对全部素材授予统一的开源许可，尤其不代表第三方音乐、演出照片、课程材料或视频片段可被任意转载。

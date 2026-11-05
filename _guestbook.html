@@ -1,0 +1,33 @@
+<section id="guestbook" class="section guestbook-section" aria-labelledby="guestbookTitle">
+  <div class="wrap">
+    <div class="guestbook-heading">
+      <div class="eyebrow">STAR NOTES / <span data-gb-key="eyebrow">星际留言簿</span></div>
+      <h2 id="guestbookTitle" data-gb-key="title">在这片星空，留下你的想法。</h2>
+      <p data-gb-key="intro">哪件作品让你停留？哪个细节可以更好？欢迎留言，也欢迎回复彼此。</p>
+    </div>
+    <div class="guestbook-shell">
+      <details class="guestbook-identity" id="guestbookIdentity">
+        <summary><span data-gb-key="choose">为留言选一个星座签名</span><small data-gb-key="optional">可选</small></summary>
+        <div class="guestbook-identity-body">
+          <div class="guestbook-badge-preview" id="guestbookBadge" aria-live="polite"></div>
+          <div class="guestbook-star-controls">
+            <label for="guestbookZodiac" data-gb-key="yourStar">你的星座</label>
+            <select id="guestbookZodiac"><option value="" data-gb-key="selectPrompt">选择一个喜欢的星座</option></select>
+            <p class="guestbook-quiet" data-gb-key="signatureHelp">复制后粘贴到评论开头，其他访客就能看到你的星座图标。</p>
+            <div class="guestbook-actions"><button type="button" id="guestbookCopyBadge" disabled data-gb-key="copy">复制星座签名</button><button type="button" id="guestbookSuggest" aria-controls="guestbookStarQuiz" aria-expanded="false" data-gb-key="suggest">帮我选一个</button></div>
+            <fieldset id="guestbookStarQuiz" hidden>
+              <legend data-gb-key="quizQuestion">这次你更想带走什么？</legend>
+              <div class="guestbook-quiz-options"><button type="button" data-gb-star="Leo" data-gb-key="quizLeo">创作的勇气</button><button type="button" data-gb-star="Vir" data-gb-key="quizVir">细节的秩序</button><button type="button" data-gb-star="Aqr" data-gb-key="quizAqr">新鲜的点子</button></div>
+            </fieldset>
+            <div class="guestbook-copy-fallback" id="guestbookCopyFallback" hidden><label for="guestbookSignature" data-gb-key="manualCopy">也可以选中下面的签名复制</label><textarea id="guestbookSignature" rows="3" readonly></textarea></div>
+            <p id="guestbookIdentityStatus" class="guestbook-quiet" role="status"></p>
+          </div>
+        </div>
+      </details>
+      <div class="guestbook-comments-top"><p data-gb-key="authHint">所有留言公开可见。登录 GitHub 后即可评论、回复、@ 他人或点赞。</p><a id="guestbookDiscussionLink" href="https://github.com/3535348582-prog/jiale-portfolio/discussions" target="_blank" rel="noopener noreferrer" data-gb-key="openDiscussion">在 GitHub 打开留言 ↗</a></div>
+      <div class="guestbook-load-state"><p id="guestbookStatus" role="status" data-gb-key="idle">滚动到这里后，留言会自动载入。</p><button id="guestbookLoad" type="button" data-gb-key="load">加载留言</button></div>
+      <div class="giscus" id="guestbookComments" aria-label="公开留言与回复"></div>
+      <noscript><p>请启用 JavaScript，或<a href="https://github.com/3535348582-prog/jiale-portfolio/discussions">前往 GitHub 查看与发表留言</a>。</p></noscript>
+    </div>
+  </div>
+</section>
