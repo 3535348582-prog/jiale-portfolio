@@ -4,26 +4,41 @@
   const root=document.getElementById('anonymousComments');if(!root||root.dataset.mounted)return;root.dataset.mounted='true';
   const $=id=>document.getElementById(id),form=$('anonymousCommentForm'),nickname=$('anonymousNickname'),body=$('anonymousCommentBody'),feed=$('anonymousCommentFeed'),status=$('anonymousCommentStatus'),submit=$('anonymousCommentSubmit'),refresh=$('anonymousCommentRefresh'),more=$('anonymousCommentMore'),mentions=$('anonymousMentionList');
   const formHome=form.parentNode,formNext=form.nextSibling;
-  const identitySave=$('anonymousIdentitySave'),identityStatus=$('anonymousIdentityStatus');let savingIdentity=false;
+  const identitySave=$('anonymousIdentitySave'),identityStatus=$('anonymousIdentityStatus');let savingIdentity=false,ownerVerified=false,restoreTask=null;
   const zh={intro:'无需注册，填写昵称就能留言。昵称和星座会随留言公开显示。',nickname:'访客昵称（可选）',bodyLabel:'留言内容',cancelReply:'取消回复',send:'发送留言',listTitle:'星际留言',refresh:'刷新留言',more:'查看更多留言',placeholder:'留下你的想法，也可以输入 @ 提及其他访客。',defaultName:'星际旅人',loading:'正在接收星际留言…',empty:'还没有留言。来留下第一颗星吧。',loadFailed:'留言暂时未能载入，请点击“刷新留言”重试。',sending:'正在发送…',sent:'留言已送达，其他访客也能看到。',sentRefresh:'留言已送达，列表刷新暂时失败，可稍后点击刷新。',error:'暂时未能完成，请稍后重试。',rate:'操作太频繁，请稍等一会儿再试。',unavailable:'留言服务暂时不可用，请稍后再试。',reply:'回复',replying:'正在回复 ',like:'点赞',liked:'已点赞',remove:'删除',confirmRemove:'确认删除',cancelRemove:'取消',deleted:'这条留言已由作者删除。',deleteConfirm:'删除自己的这条留言？已有回复会保留。',bodyRequired:'请先写下你的想法。',tooLong:'留言最多 1000 字，昵称最多 24 字。',moreFailed:'更多留言暂时未能载入，请重试。',mention:'提及访客'};
   const en={intro:'No account needed. Your nickname and constellation will appear with your public comment.',nickname:'Visitor nickname (optional)',bodyLabel:'Comment',cancelReply:'Cancel reply',send:'Send comment',listTitle:'Star notes',refresh:'Refresh',more:'Load more',placeholder:'Share a thought, or type @ to mention another visitor.',defaultName:'Star traveller',loading:'Receiving star notes…',empty:'No comments yet. Leave the first star.',loadFailed:'Comments could not be loaded. Select Refresh to try again.',sending:'Sending…',sent:'Your comment is public and visible to other visitors.',sentRefresh:'Your comment was saved, but the list could not refresh. Please refresh later.',error:'That could not be completed. Please try again.',rate:'Too many requests. Please wait a moment.',unavailable:'The comment service is temporarily unavailable.',reply:'Reply',replying:'Replying to ',like:'Like',liked:'Liked',remove:'Delete',confirmRemove:'Confirm delete',cancelRemove:'Cancel',deleted:'This comment was deleted by its author.',deleteConfirm:'Delete your comment? Existing replies will remain.',bodyRequired:'Write your thought first.',tooLong:'Comments can have up to 1000 characters; nicknames up to 24.',moreFailed:'More comments could not be loaded. Please retry.',mention:'Mention a visitor'};
   Object.assign(zh,{saveIdentity:'保存发言信息',identitySaving:'正在保存…',identitySaved:'发言信息已保存。',identityRequired:'请先填写昵称，再保存发言信息。',identityHelp:'填写昵称并选择星座后可保存。',identityCurrent:'当前以 {name} · {star} 发言'});
   Object.assign(en,{saveIdentity:'Save identity',identitySaving:'Saving…',identitySaved:'Your comment identity is saved.',identityRequired:'Enter a nickname before saving your identity.',identityHelp:'Enter a nickname and choose a constellation to save your identity.',identityCurrent:'Posting as {name} · {star}'});
+  Object.assign(zh,{owner:'站主',ownerIdentity:'已识别站主 · 沈佳乐 · 狮子座'});
+  Object.assign(en,{owner:'Creator',ownerIdentity:'Site creator · Jiale Shen · Leo'});
   const english=()=>document.documentElement.lang.startsWith('en'),t=key=>(english()?en:zh)[key];
   let config={};try{config=JSON.parse($('portfolioGuestbookConfig')?.textContent||'{}');}catch{}
   const base=String(config.apiBase||'').replace(/\/+$/,'');
   const deleting=new Set();
   const storageKey='jiale.anonymous.visitor.v1';let session=null,sessionTask=null,loadTask=null,items=[],nextCursor=null,loading=false,pending=false,replyingTo=null,mentionItems=[],mentionIndex=0,observer,statusKey='',statusKind='';
-  try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&typeof saved.token==='string'&&saved.visitor?.id)session=saved;}catch{}
+  try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&typeof saved.token==='string'&&saved.visitor?.id)session={token:saved.token,visitor:{...saved.visitor,isOwner:false}};}catch{}
   nickname.value='';nickname.placeholder='';nickname.setAttribute('autocomplete','off');
   function identity(){return window.portfolioConstellationIdentity;}
-  function selectedStar(){const api=identity();let value=api?.getSelected?.();if(!value&&session?.visitor.star)value=api?.choose?.(session.visitor.star)||session.visitor.star;if(!value)value=api?.ensure?.()||api?.getSelected?.();return typeof value==='string'?value:value?.id||'Leo';}
+  function isOwner(){return ownerVerified&&session?.visitor.isOwner===true;}
+  function acceptVisitor(visitor){
+    if(!visitor?.id)throw new Error('Invalid visitor response');
+    ownerVerified=visitor.isOwner===true;session.visitor={...visitor,isOwner:ownerVerified};
+    if(ownerVerified){session.visitor.nickname='沈佳乐';session.visitor.star='Leo';nickname.value='';identity()?.choose?.('Leo');}
+    remember();
+  }
+  async function restoreSession(){
+    try{const result=await request('/session',{authenticated:true});if(!result.visitor){session=null;ownerVerified=false;remember();return;}acceptVisitor(result.visitor);}
+    catch(error){if(error.status===401){session=null;ownerVerified=false;remember();}}
+  }
+  function selectedStar(){if(isOwner()){identity()?.choose?.('Leo');return 'Leo';}const api=identity();let value=api?.getSelected?.();if(!value&&session?.visitor.star)value=api?.choose?.(session.visitor.star)||session.visitor.star;if(!value)value=api?.ensure?.()||api?.getSelected?.();return typeof value==='string'?value:value?.id||'Leo';}
   function stars(){return identity()?.stars||[];}
   function starFor(id){return stars().find(s=>s.id===id);}
   function announce(key,kind=''){statusKey=key;statusKind=kind;status.textContent=t(key);status.dataset.kind=kind;}
   function updateIdentityUI(){
-    if(identitySave){identitySave.textContent=t(savingIdentity?'identitySaving':'saveIdentity');identitySave.disabled=savingIdentity||pending;}
-    if(identityStatus){const star=starFor(session?.visitor.star);identityStatus.textContent=session?t('identityCurrent').replace('{name}',session.visitor.nickname).replace('{star}',star?(english()?star.en:star.zh):session.visitor.star):t('identityHelp');}
+    const owner=isOwner();form.dataset.owner=String(owner);nickname.disabled=owner;
+    if(identitySave){identitySave.hidden=owner;identitySave.textContent=t(savingIdentity?'identitySaving':'saveIdentity');identitySave.disabled=owner||savingIdentity||pending;}
+    const starControls=$('guestbookIdentity');if(starControls)starControls.hidden=owner;
+    if(identityStatus){const star=starFor(session?.visitor.star);identityStatus.textContent=owner?t('ownerIdentity'):session?t('identityCurrent').replace('{name}',session.visitor.nickname).replace('{star}',star?(english()?star.en:star.zh):session.visitor.star):t('identityHelp');}
   }
   function remember(){try{if(session)localStorage.setItem(storageKey,JSON.stringify(session));else localStorage.removeItem(storageKey);}catch{}updateIdentityUI();}
   function errorText(error){return error?.status===429?'rate':error?.status===503?'unavailable':'error';}
@@ -33,12 +48,12 @@
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),18000);
     try{const response=await fetch(base+'/api/guestbook'+path,{method,headers,body:data===undefined?undefined:JSON.stringify(data),mode:'cors',credentials:'omit',signal:controller.signal});let result={};try{result=await response.json();}catch{}if(!response.ok)throw Object.assign(new Error('Request failed'),{status:response.status});return result;}finally{clearTimeout(timer);}
   }
-  function ensureSession(force=false){if(sessionTask)return sessionTask;sessionTask=updateSession(force).finally(()=>{sessionTask=null;});return sessionTask;}
+  function ensureSession(force=false){if(sessionTask)return sessionTask;sessionTask=(async()=>{if(restoreTask)await restoreTask;return updateSession(force);})().finally(()=>{sessionTask=null;});return sessionTask;}
   async function updateSession(force=false){
-    const name=nickname.value.trim()||session?.visitor.nickname||t('defaultName'),star=selectedStar();
-    if(force){session=null;remember();}
-    if(!session){const result=await request('/session',{method:'POST',data:{nickname:name,star,website:$('anonymousWebsite').value}});if(!result.token||!result.visitor?.id)throw new Error('Invalid visitor response');session={token:result.token,visitor:result.visitor};remember();}
-    else if(session.visitor.nickname!==name||session.visitor.star!==star){const result=await request('/session',{method:'PATCH',authenticated:true,data:{nickname:name,star}});session.visitor=result.visitor||{...session.visitor,nickname:name,star};remember();}
+    const name=isOwner()?'沈佳乐':nickname.value.trim()||session?.visitor.nickname||t('defaultName'),star=selectedStar();
+    if(force){session=null;ownerVerified=false;remember();}
+    if(!session){const result=await request('/session',{method:'POST',data:{nickname:name,star,website:$('anonymousWebsite').value}});if(!result.token||!result.visitor?.id)throw new Error('Invalid visitor response');session={token:result.token,visitor:result.visitor};acceptVisitor(result.visitor);}
+    else if(session.visitor.nickname!==name||session.visitor.star!==star){const result=await request('/session',{method:'PATCH',authenticated:true,data:{nickname:name,star}});acceptVisitor(result.visitor||{...session.visitor,nickname:name,star});}
     return session;
   }
   async function withSession(operation){try{await ensureSession();return await operation();}catch(error){if(error.status!==401)throw error;await ensureSession(true);return operation();}}
@@ -47,7 +62,7 @@
     if(!session&&!nickname.value.trim()){announce('identityRequired','error');nickname.focus();return;}
     if(nickname.value.trim().length>24){announce('tooLong','error');return;}
     savingIdentity=true;submit.disabled=true;nickname.readOnly=true;updateIdentityUI();
-    try{await withSession(()=>Promise.resolve(session));nickname.value='';announce('identitySaved','success');for(const item of items)if(item.author?.id===session.visitor.id)item.author={...session.visitor};render();}
+    try{await withSession(()=>Promise.resolve(session));nickname.value='';announce('identitySaved','success');try{await load();}catch{render();}}
     catch(error){announce(errorText(error),'error');}
     finally{savingIdentity=false;submit.disabled=false;nickname.readOnly=false;updateIdentityUI();}
   });
@@ -82,11 +97,12 @@
     if(mentionItems.length)body.setAttribute('aria-activedescendant','anonymousMention0');else body.removeAttribute('aria-activedescendant');
   }
   function commentNode(item,depth){
-    const author=item.author||{},node=el('article','anc-comment'+(depth?' anc-is-reply':''));node.dataset.commentId=String(item.id);
-    const head=el('div','anc-comment-head'),meta=el('div','anc-author-meta');head.append(avatar(author.star));
-    const name=String(author.nickname||t('defaultName')),nameButton=button(name,()=>insertMention(name),'anc-author-name');nameButton.setAttribute('aria-label',(english()?'Mention ':'提及 ')+name);meta.append(nameButton);
+    const author=item.author||{},owner=author.isOwner===true,node=el('article','anc-comment'+(depth?' anc-is-reply':'')+(owner?' anc-is-owner':''));node.dataset.commentId=String(item.id);
+    const head=el('div','anc-comment-head'),meta=el('div','anc-author-meta');head.append(avatar(owner?'Leo':author.star));
+    const name=owner?'沈佳乐':String(author.nickname||t('defaultName')),nameButton=button(name,()=>insertMention(name),'anc-author-name');nameButton.setAttribute('aria-label',(english()?'Mention ':'提及 ')+name);meta.append(nameButton);
+    if(owner)meta.append(el('span','anc-owner-badge',t('owner')));
     if(!item.deleted&&String(item.id)===String(config.pinnedCommentId||''))meta.append(el('span','anc-pinned',english()?'Pinned':'置顶'));
-    const star=starFor(author.star);if(star)meta.append(el('span','anc-author-star',english()?star.en:star.zh));const date=el('time','anc-time',dateLabel(item.createdAt));date.dateTime=String(item.createdAt||'');meta.append(date);head.append(meta);node.append(head);
+    const star=starFor(owner?'Leo':author.star);if(star)meta.append(el('span','anc-author-star',english()?star.en:star.zh));const date=el('time','anc-time',dateLabel(item.createdAt));date.dateTime=String(item.createdAt||'');meta.append(date);head.append(meta);node.append(head);
     node.append(el('p','anc-comment-body'+(item.deleted?' anc-deleted':''),item.deleted?t('deleted'):String(item.body||'')));
     if(!item.deleted){const actions=el('div','anc-comment-actions');
       actions.append(button(t('reply'),()=>{if(pending)return;replyingTo={id:item.id,name};updateReply();body.focus();if(!body.value)insertMention(name);}));
@@ -122,7 +138,7 @@
   async function loadNow(append=false){
     loading=true;refresh.disabled=true;more.disabled=true;feed.setAttribute('aria-busy','true');
     if(!items.length){feed.replaceChildren(el('p','anc-empty',t('loading')));}
-    try{const cursor=append&&nextCursor?'?cursor='+encodeURIComponent(nextCursor):'';let result;try{result=await request('/comments'+cursor,{authenticated:!!session});}catch(error){if(error.status!==401)throw error;session=null;remember();result=await request('/comments'+cursor);}
+    try{const cursor=append&&nextCursor?'?cursor='+encodeURIComponent(nextCursor):'';let result;try{result=await request('/comments'+cursor,{authenticated:!!session});}catch(error){if(error.status!==401)throw error;session=null;ownerVerified=false;remember();result=await request('/comments'+cursor);}
       if(!Array.isArray(result.comments))throw new Error('Invalid list response');const incoming=result.comments.filter(item=>item&&item.id!==undefined);items=append?[...new Map([...items,...incoming].map(item=>[String(item.id),item])).values()]:incoming;nextCursor=result.nextCursor||null;render();
     }catch(error){if(!items.length)feed.replaceChildren(el('p','anc-empty',t('loadFailed')));else announce(append?'moreFailed':'loadFailed','error');throw error;}
     finally{loading=false;refresh.disabled=false;more.disabled=false;feed.setAttribute('aria-busy','false');}
@@ -138,6 +154,7 @@
   $('anonymousCancelReply').addEventListener('click',()=>{if(pending)return;replyingTo=null;updateReply();});refresh.addEventListener('click',()=>load().catch(()=>{}));more.addEventListener('click',()=>load(true).catch(()=>{}));
   function language(){root.querySelectorAll('[data-anc-key]').forEach(node=>{node.textContent=t(node.dataset.ancKey);});nickname.placeholder='';body.placeholder=t('placeholder');mentions.setAttribute('aria-label',t('mention'));if(statusKey)announce(statusKey,statusKind);updateReply();updateIdentityUI();count();if(items.length)render();}
   addEventListener('portfolio-language-change',language);language();
+  if(session)restoreTask=restoreSession().finally(()=>{restoreTask=null;});
   if('IntersectionObserver' in window){observer=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting)){observer.disconnect();load().catch(()=>{});}},{rootMargin:'200px 0px'});observer.observe(root);}else load().catch(()=>{});
   window.portfolioAnonymousComments={refresh:()=>load(),getCount:()=>items.length};
 })();

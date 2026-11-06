@@ -1,4 +1,5 @@
 import { env } from "cloudflare:workers";
+import ownerProfiles from "./owner-profile-ids.json";
 
 const ORIGINS = new Set([
   "https://jiale-shen-portfolio.surge.sh",
@@ -8,7 +9,18 @@ const ORIGINS = new Set([
 const STARS = new Set(["Ari", "Tau", "Gem", "Cnc", "Leo", "Vir", "Lib", "Sco", "Sgr", "Cap", "Aqr", "Psc"]);
 const SITE = "jiale-portfolio";
 const MAX_JSON = 8192;
-type Profile = { id: string; nickname: string; star: string };
+type StoredProfile = { id: string; nickname: string; star: string };
+type Profile = StoredProfile & { isOwner: boolean };
+// IDs are curated in server source. A public nickname or request flag never
+// grants owner status; authenticated calls must still prove the profile token.
+const OWNER_PROFILE_IDS = new Set<string>((ownerProfiles.profileIds as unknown[]).filter((id): id is string =>
+  typeof id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+).map(id => id.toLowerCase()));
+function publicProfile(profile: StoredProfile): Profile {
+  const isOwner = OWNER_PROFILE_IDS.has(profile.id.toLowerCase());
+  return { id: profile.id, nickname: isOwner ? "沈佳乐" : profile.nickname,
+    star: isOwner ? "Leo" : profile.star, isOwner };
+}
 type Row = { id: string; body: string; parent_id: string | null; created_at: number; deleted: number; author_id: string; nickname: string; star: string; likes: number; liked_by_me: number };
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string, public retryAfter?: number) { super(message); }
@@ -87,9 +99,12 @@ async function visitor(request: Request, required = true): Promise<Profile | nul
   if (!authorization && !required) return null;
   const token = authorization?.match(/^Bearer ([a-f0-9]{64})$/i)?.[1];
   if (!token) throw new ApiError(401, "visitor_required", "请先填写昵称，建立本机留言身份。");
-  const profile = await db().prepare("SELECT id,nickname,star FROM profiles WHERE token_hash=?").bind(await hash(token)).first<Profile>();
+  const profile = await db().prepare("SELECT id,nickname,star FROM profiles WHERE token_hash=?").bind(await hash(token)).first<StoredProfile>();
   if (!profile) throw new ApiError(401, "visitor_expired", "本机留言身份已失效，请重新填写昵称。");
-  return profile;
+  return publicProfile(profile);
+}
+export async function getSession(request: Request) {
+  return { visitor: await visitor(request, false) };
 }
 export async function createSession(request: Request) {
   const data = await payload(request), nickname = cleanString(data.nickname, "nickname", 24), star = cleanStar(data.star);
@@ -104,22 +119,30 @@ export async function createSession(request: Request) {
     db().prepare("INSERT INTO profiles(id,token_hash,nickname,star,created_at,last_post_at) VALUES(?,?,?,?,?,0)").bind(profile.id, await hash(token), nickname, star, now),
     db().prepare("DELETE FROM session_limits WHERE hour<?").bind(hour - 24),
   ]);
-  return { token, visitor: profile };
+  return { token, visitor: publicProfile(profile) };
 }
 export async function updateSession(request: Request) {
   const who = (await visitor(request))!, data = await payload(request);
-  const nickname = data.nickname === undefined ? who.nickname : cleanString(data.nickname, "nickname", 24);
-  const star = data.star === undefined ? who.star : cleanStar(data.star);
+  const nickname = who.isOwner ? "沈佳乐" : data.nickname === undefined ? who.nickname : cleanString(data.nickname, "nickname", 24);
+  const star = who.isOwner ? "Leo" : data.star === undefined ? who.star : cleanStar(data.star);
   await db().prepare("UPDATE profiles SET nickname=?,star=? WHERE id=?").bind(nickname, star, who.id).run();
-  return { visitor: { id: who.id, nickname, star } };
+  return { visitor: publicProfile({ id: who.id, nickname, star }) };
 }
 const COMMENT_SELECT = `SELECT c.id,c.body,c.parent_id,c.created_at,c.deleted,c.author_id,p.nickname,p.star,
  (SELECT COUNT(*) FROM reactions r WHERE r.comment_id=c.id AND r.active=1) AS likes,
  EXISTS(SELECT 1 FROM reactions r WHERE r.comment_id=c.id AND r.visitor_id=? AND r.active=1) AS liked_by_me
  FROM comments c JOIN profiles p ON p.id=c.author_id`;
 function output(row: Row) {
+  const legacyGuests: Record<string, { nickname: string; star: string }> = ownerProfiles.legacyGuestComments;
+  const guest = legacyGuests[row.id];
+  // A known historical guest post shared a browser profile with the owner.
+  // Preserve that post's original public attribution without changing authorship,
+  // body, thread parent, reactions, or author-only write permissions.
+  const author = guest
+    ? { id: row.author_id, nickname: guest.nickname, star: guest.star, isOwner: false }
+    : publicProfile({ id: row.author_id, nickname: row.nickname, star: row.star });
   return { id: row.id, body: row.deleted ? "" : row.body, parentId: row.parent_id, createdAt: row.created_at,
-    author: { id: row.author_id, nickname: row.nickname, star: row.star }, likes: Number(row.likes), likedByMe: !!row.liked_by_me, deleted: !!row.deleted };
+    author, likes: Number(row.likes), likedByMe: !!row.liked_by_me, deleted: !!row.deleted };
 }
 export async function listComments(request: Request) {
   const who = await visitor(request, false), raw = new URL(request.url).searchParams.get("cursor");

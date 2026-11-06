@@ -54,3 +54,17 @@
 @media(max-width:440px){.anc-nickname-controls{flex-wrap:wrap}.guestbook-shell #anonymousIdentitySave{min-width:118px}}
 @media(max-width:760px){.anc-fields{flex-wrap:wrap}.anc-name-field{flex-basis:100%}.anc-counter{margin-left:auto;padding-bottom:0}}
 @media(max-width:440px){.anc-nickname-controls input{flex-basis:100%}.guestbook-shell #anonymousIdentitySave{width:100%}}
+
+/* Creator treatment is applied only to the server's verified owner flag. */
+.guestbook-shell #guestbookIdentity[hidden]{display:none!important}
+.anc-form[data-owner="true"] .anc-name-field>label,.anc-form[data-owner="true"] .anc-nickname-controls{display:none}
+.anc-form[data-owner="true"] .anc-identity-status{color:#e9d2a1;font-size:13px;letter-spacing:.04em}
+.guestbook-shell .anc-is-owner .anc-author-name{font-family:"STKaiti","KaiTi","Songti SC",var(--serif,serif);font-size:27px;font-weight:700;letter-spacing:.1em;line-height:1.35;color:#ffe4ae;text-shadow:0 0 14px #dfb35355,0 1px 1px #0008;background:transparent}
+.anc-owner-badge{display:inline-flex;align-items:center;padding:2px 7px;border:1px solid #d6b77088;border-radius:20px;color:#ead4a1;font-size:10px;line-height:1.6;letter-spacing:.08em;background:#bfa35c12}
+.anc-is-owner .anc-avatar{border-color:#cdb27399;box-shadow:0 0 12px #d5ae4d1c}
+@supports((background-clip:text) or (-webkit-background-clip:text)){
+  .guestbook-shell .anc-is-owner .anc-author-name{background-image:linear-gradient(110deg,#c69a50 0%,#f9e4aa 24%,#fff8dc 46%,#d3a454 62%,#f7e1a2 82%,#c69a50 100%);background-size:220% 100%;background-clip:text;-webkit-background-clip:text;color:transparent;animation:anc-owner-sheen 8s ease-in-out infinite}
+}
+@keyframes anc-owner-sheen{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@media(max-width:440px){.guestbook-shell .anc-is-owner .anc-author-name{font-size:25px;letter-spacing:.06em}}
+@media(prefers-reduced-motion:reduce){.guestbook-shell .anc-is-owner .anc-author-name{animation:none;background-position:50% 50%}}
