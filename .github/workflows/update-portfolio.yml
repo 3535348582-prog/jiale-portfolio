@@ -1,0 +1,161 @@
+name: Update portfolio comments and constellations
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-portfolio-source
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the existing portfolio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Download and verify the approved small update
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path, PurePosixPath
+          import hashlib, json, os, re, stat, urllib.request, zipfile
+          root = Path.cwd().resolve()
+          expected_sha = '1c83c7743750a25cf4cc1fad8044d5a84e9f8b69f0506e2fa11b07c3d379365f'
+          expected_files = 65
+          expected_archive_bytes = 191469
+          expected_uncompressed_bytes = 742074
+          source_url = 'https://jiale-shen-portfolio.surge.sh/portfolio-update.zip'
+          manifest_url = 'https://jiale-shen-portfolio.surge.sh/portfolio-update.json'
+          root_files = {'_panel_stars.js', '_panel_stars.css', '_guestbook.js',
+              '_guestbook.html', '_guestbook.css', '_anonymous_comments.js',
+              '_anonymous_comments.css', 'guestbook.config.json', 'build_portfolio.py', 'README.md'}
+          service_root_files = {'.gitignore', 'cloudflare-env.d.ts', 'drizzle.config.ts',
+              'eslint.config.mjs', 'next.config.ts', 'package-lock.json', 'package.json',
+              'postcss.config.mjs', 'README.md', 'tsconfig.json', 'vite.config.ts'}
+          service_dirs = {'app', 'db', 'drizzle', 'lib', 'public', 'scripts', 'vendor', 'worker'}
+          extensions = {'.ts', '.tsx', '.mts', '.mjs', '.js', '.cjs', '.css', '.json',
+              '.sql', '.svg', '.png', '.jpg', '.jpeg', '.webp', '.ico', '.md',
+              '.txt', '.sh', '.woff', '.woff2'}
+          forbidden_parts = {'.git', '.github', 'dist', 'node_modules', '__pycache__',
+              '.wrangler', '.sites-runtime', '.vinext', '.next', 'outputs', 'work', 'coverage'}
+          def approved_path(name):
+              p = PurePosixPath(name)
+              if (not name or chr(92) in name or ':' in name or chr(0) in name
+                      or p.is_absolute() or name != p.as_posix()
+                      or any(part in ('', '.', '..') or part in forbidden_parts for part in p.parts)):
+                  return False
+              if name in root_files:
+                  return True
+              if len(p.parts) < 2 or p.parts[0] != 'comment-service':
+                  return False
+              service = PurePosixPath(*p.parts[1:])
+              if service.as_posix() == '.openai/hosting.json':
+                  return True
+              if len(service.parts) == 1:
+                  return service.name in service_root_files
+              return (service.parts[0] in service_dirs
+                  and all(not part.startswith('.') for part in service.parts)
+                  and service.suffix.lower() in extensions)
+          request = urllib.request.Request(manifest_url, headers={'Cache-Control':'no-cache','User-Agent':'portfolio-source-update'})
+          with urllib.request.urlopen(request, timeout=60) as response:
+              raw_manifest = response.read(262145)
+          assert len(raw_manifest) <= 262144, 'Update manifest is unexpectedly large'
+          manifest = json.loads(raw_manifest)
+          assert manifest['format'] == 1 and manifest['kind'] == 'portfolio-source-overlay'
+          assert manifest['archive'] == 'portfolio-update.zip'
+          assert manifest['archive_sha256'] == expected_sha
+          assert manifest['files'] == expected_files
+          assert manifest['archive_bytes'] == expected_archive_bytes
+          assert manifest['uncompressed_bytes'] == expected_uncompressed_bytes
+          assert 0 < expected_archive_bytes < 5*1024*1024
+          assert 0 < expected_uncompressed_bytes < 5*1024*1024
+          approved = {}
+          folded = set()
+          assert isinstance(manifest['entries'], list) and len(manifest['entries']) == expected_files
+          for item in manifest['entries']:
+              name = item['path']
+              assert isinstance(name, str) and approved_path(name), 'Unapproved update path'
+              assert name.casefold() not in folded, 'Duplicate or case-colliding update path'
+              assert isinstance(item['bytes'], int) and 0 <= item['bytes'] < 2*1024*1024
+              assert re.fullmatch('[0-9a-f]{64}', item['sha256'])
+              approved[name] = item
+              folded.add(name.casefold())
+          assert root_files.issubset(approved)
+          assert sum(item['bytes'] for item in approved.values()) == expected_uncompressed_bytes
+          archive = Path(os.environ['RUNNER_TEMP'])/'portfolio-update.zip'
+          archive_digest = hashlib.sha256()
+          total = 0
+          request = urllib.request.Request(source_url, headers={'Cache-Control':'no-cache','User-Agent':'portfolio-source-update'})
+          with urllib.request.urlopen(request, timeout=120) as response, archive.open('wb') as output:
+              while chunk := response.read(1024*1024):
+                  total += len(chunk)
+                  assert total <= expected_archive_bytes, 'Update exceeds its pinned size'
+                  output.write(chunk)
+                  archive_digest.update(chunk)
+          assert total == expected_archive_bytes and archive_digest.hexdigest() == expected_sha, 'Update checksum mismatch'
+          with zipfile.ZipFile(archive) as z:
+              entries = z.infolist()
+              assert len(entries) == expected_files
+              assert sum(entry.file_size for entry in entries) == expected_uncompressed_bytes
+              seen = set()
+              for entry in entries:
+                  name = entry.filename
+                  assert approved_path(name) and name in approved and name not in seen
+                  assert not entry.is_dir() and not stat.S_ISLNK(entry.external_attr >> 16)
+                  assert entry.file_size == approved[name]['bytes']
+                  destination = root.joinpath(*PurePosixPath(name).parts)
+                  assert root in destination.resolve().parents
+                  assert not destination.is_symlink()
+                  assert not any(parent.is_symlink() for parent in destination.parents if parent != root and root in parent.parents)
+                  assert hashlib.sha256(z.read(entry)).hexdigest() == approved[name]['sha256'], 'Source file checksum mismatch'
+                  seen.add(name)
+              assert seen == set(approved) and z.testzip() is None
+              # Nothing is written until every archive entry has been checked.
+              for entry in entries:
+                  destination = root.joinpath(*PurePosixPath(entry.filename).parts)
+                  destination.parent.mkdir(parents=True, exist_ok=True)
+                  destination.write_bytes(z.read(entry))
+          (Path(os.environ['RUNNER_TEMP'])/'portfolio-update-approved-paths.json').write_text(json.dumps(sorted(approved)), encoding='utf-8')
+          print(f'Verified and applied {expected_files} small source updates; existing media were preserved.')
+          PY
+
+      - name: Build the updated portfolio before committing
+        run: python build_portfolio.py
+
+      - name: Commit only the approved source files
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, os, subprocess
+          paths = json.loads((Path(os.environ['RUNNER_TEMP'])/'portfolio-update-approved-paths.json').read_text(encoding='utf-8'))
+          subprocess.run(['git','config','user.name','github-actions[bot]'], check=True)
+          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'], check=True)
+          subprocess.run(['git','add','--',*paths], check=True)
+          staged = subprocess.check_output(['git','diff','--cached','--name-only','-z']).decode('utf-8').split(chr(0))
+          assert set(filter(None, staged)).issubset(paths), 'Unexpected staged files; refusing to commit'
+          result = subprocess.run(['git','diff','--cached','--quiet'])
+          assert result.returncode in (0,1)
+          if result.returncode == 0:
+              print('The approved source update is already present.')
+          else:
+              subprocess.run(['git','commit','-m','Add anonymous star notes and persistent constellations'], check=True)
+              subprocess.run(['git','push','origin','HEAD:'+os.environ['GITHUB_REF_NAME']], check=True)
+          PY
+
+      - name: Save the verified static site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-dist
+          path: dist
