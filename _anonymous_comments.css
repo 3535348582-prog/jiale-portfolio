@@ -38,3 +38,9 @@
 .anonymous-comments :is(input,textarea,button):focus-visible{outline:2px solid #a6e8ff;outline-offset:3px}
 @media(max-width:760px){.anc-form{padding:14px}.anc-fields{gap:8px}.anc-fields label{width:100%}.anc-counter{font-size:10px}.anc-submit-row{align-items:stretch;flex-direction:column;gap:10px}.anc-submit-row>button{width:100%}.anc-comment.anc-is-reply{margin-left:12px;padding-left:12px}.anc-comment-body,.anc-comment-actions{margin-left:0}.anc-author-meta{gap:2px 8px}.anc-avatar{width:42px;height:42px;flex-basis:42px}.anc-time{flex-basis:100%}.anc-replying{align-items:flex-start}.anc-replying button{padding:6px 8px!important;font-size:12px!important}}
 @media(prefers-reduced-motion:reduce){.anonymous-comments *{scroll-behavior:auto!important;transition:none!important}}
+
+/* Append to _anonymous_comments.css: inline, reversible author deletion. */
+.anc-delete-confirm{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;flex-basis:100%;padding-top:6px}
+.anc-delete-prompt{flex-basis:100%;font-size:12px;line-height:1.7;color:#a9b9c8}
+.guestbook-shell .anc-comment-actions .anc-delete-confirm-button{border-color:#a28b59;color:#eed6a4}
+.anc-delete-confirm button:disabled{opacity:.55;cursor:wait}
