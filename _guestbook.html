@@ -22,7 +22,7 @@
       <div class="anonymous-comments" id="anonymousComments" aria-label="公开留言与回复">
         <p class="anc-intro" data-anc-key="intro">无需注册，填写昵称就能留言。昵称和星座会随留言公开显示。</p>
         <form id="anonymousCommentForm" class="anc-form">
-          <div class="anc-fields"><label for="anonymousNickname"><span data-anc-key="nickname">访客昵称（可选）</span><input id="anonymousNickname" name="nickname" maxlength="24" autocomplete="nickname" placeholder="星际旅人"></label><span class="anc-counter" id="anonymousCommentCount" aria-live="off">0 / 1000</span></div>
+          <div class="anc-fields"><div class="anc-name-field"><label for="anonymousNickname"><span data-anc-key="nickname">访客昵称（可选）</span></label><div class="anc-nickname-controls"><input id="anonymousNickname" name="nickname" maxlength="24" autocomplete="off" placeholder="" aria-describedby="anonymousIdentityStatus"><button type="button" id="anonymousIdentitySave">保存发言信息</button></div><p id="anonymousIdentityStatus" class="anc-identity-status" role="status">填写昵称并选择星座后可保存。</p></div><span class="anc-counter" id="anonymousCommentCount" aria-live="off">0 / 1000</span></div>
           <div class="anc-replying" id="anonymousReplying" hidden><span id="anonymousReplyTarget"></span><button type="button" id="anonymousCancelReply" data-anc-key="cancelReply">取消回复</button></div>
           <label class="anc-sr-only" for="anonymousCommentBody" data-anc-key="bodyLabel">留言内容</label>
           <textarea id="anonymousCommentBody" name="body" maxlength="1000" rows="4" required placeholder="留下你的想法，也可以输入 @ 提及其他访客。" aria-describedby="anonymousCommentStatus" aria-controls="anonymousMentionList" aria-autocomplete="list"></textarea>
