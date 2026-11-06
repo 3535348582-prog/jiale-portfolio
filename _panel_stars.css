@@ -106,3 +106,26 @@
   .panel-star-interaction,.panel-star-scout,.panel-star-scout polyline,.panel-star-scout circle,.panel-constellation-name{transition:none}
 }
 @media(forced-colors:active){.panel-star-interaction{display:none}}
+
+
+/* Independent chart controls stay in the reserved footer, away from body content. */
+.panel-star-interaction{display:flex;align-items:center;gap:12px;pointer-events:auto}
+.panel-star-scout{flex:1 1 0;min-width:0}
+.panel-star-toggle{
+  flex:0 0 auto;min-width:72px;min-height:44px;padding:0 10px;
+  border:1px solid #8b79564d;border-radius:5px;background:#0a1522c7;
+  color:#d6c18f;font:11px/1.5 var(--sans,Segoe UI,sans-serif);white-space:nowrap;
+  cursor:pointer;touch-action:manipulation;
+}
+.panel-star-toggle:hover{border-color:#d6b878;background:#182536}
+.panel-star-toggle:focus-visible{outline:2px solid #a6e8ff;outline-offset:3px}
+.panel-star-toggle[aria-pressed="true"]{border-color:#b79a6266}
+.ai-lab>.panel-star-interaction{height:56px;min-height:56px;flex-basis:56px}
+@media(max-width:600px){.panel-star-interaction{gap:8px}.panel-star-toggle{padding:0 8px}}
+@media(max-width:600px){
+  /* Leave room for the fixed music controls; the chart toggle stays easy to tap. */
+  .panel-star-interaction{padding-right:54px}
+  .panel-star-toggle{min-width:64px;padding:0 7px;font-size:10px}
+  .panel-star-scout{grid-template-columns:54px minmax(0,1fr);gap:6px}
+  .panel-star-scout svg{width:54px;height:54px}
+}

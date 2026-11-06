@@ -1,0 +1,40 @@
+.anonymous-comments{margin-top:22px;color:#dce8f4;min-width:0}
+.anc-intro,.anc-status{font-size:13px;line-height:1.8;color:#a5bacc}
+.anc-form{margin-top:18px;padding:20px;border:1px solid #344b60;border-radius:5px;background:#08142199}
+.anc-fields{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:12px}
+.anc-fields label{display:grid;gap:8px;font-size:13px;color:#b7c8d6;width:min(100%,340px)}
+.anc-fields input,.anc-form textarea{box-sizing:border-box;width:100%;border:1px solid #3b5268;border-radius:4px;background:#07111f;color:#e1edf8;font:14px/1.7 var(--sans,"Microsoft YaHei",sans-serif);padding:10px 12px}
+.anc-fields input{min-height:44px}.anc-form textarea{display:block;min-height:126px;resize:vertical}
+.anc-counter{flex-shrink:0;color:#7f9bae;font:11px/1.6 Consolas,monospace;padding-bottom:12px}
+.anc-submit-row{display:flex;gap:16px;justify-content:space-between;align-items:center;margin-top:14px}
+.anc-status{margin:0;min-height:23px;overflow-wrap:anywhere}
+.anc-status[data-kind="error"]{color:#ecb1a5}.anc-status[data-kind="success"]{color:#b8d8bd}
+.anc-submit-row>button{flex-shrink:0;border-color:#aa8f5e;background:#293044;color:#f1dfb8}
+.anc-replying{display:flex;gap:12px;justify-content:space-between;align-items:center;margin-bottom:12px;padding:8px 10px;border-left:2px solid #bea16d;background:#cba9660a;color:#d3c199;font-size:13px}
+.anc-replying>span{overflow-wrap:anywhere;min-width:0}.anc-replying button{flex-shrink:0}
+.anc-list-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:28px 0 6px}
+.anc-list-heading h3{margin:0;color:#dbcea7;font-size:16px;font-weight:500}
+.anc-feed{min-width:0}.anc-empty{padding:22px 0;color:#95adbf;font-size:14px;line-height:1.9}
+.anc-comment{position:relative;padding:22px 0;border-bottom:1px solid #33495b88;min-width:0}
+.anc-comment.anc-is-reply{margin-left:28px;padding-left:18px;border-left:1px solid #7c6e4b55}
+.anc-comment-head{display:flex;align-items:center;gap:12px;min-width:0}
+.anc-avatar{display:flex;align-items:center;justify-content:center;flex:0 0 46px;width:46px;height:46px;border:1px solid #8e7b4d55;border-radius:50%;background:#081522;color:#d8bf83;overflow:hidden}
+.anc-avatar svg{display:block;width:43px;height:37px}
+.anc-author-meta{display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px;min-width:0}
+.guestbook-shell .anc-author-name{padding:0;min-height:44px;border:0;background:transparent;color:#dce9f5;font-size:14px;text-align:left;overflow-wrap:anywhere;max-width:100%}
+.anc-author-star{font-size:11px;color:#baab83}.anc-time{font-size:11px;color:#849eaf;line-height:1.6}
+.anc-comment-body{margin:12px 0 12px 58px;font-size:14px;line-height:1.95;white-space:pre-wrap;overflow-wrap:anywhere;color:#b9ccdc}
+.anc-comment-body.anc-deleted{color:#7891a3;font-style:italic}
+.anc-comment-actions{display:flex;flex-wrap:wrap;gap:6px 10px;margin-left:58px}
+.guestbook-shell .anc-comment-actions button{min-height:44px;padding:7px 10px;font-size:12px;background:#0b1b2a;border-color:#355064;color:#a9c4d8}
+.guestbook-shell .anc-comment-actions button[aria-pressed="true"]{color:#eed6a4;border-color:#a28b59;background:#c7a85c12}
+.guestbook-shell .anc-comment-actions .anc-delete{color:#9cabb5;border-color:transparent;background:transparent}
+.anc-more{margin-top:18px;width:100%}
+.anc-mentions{display:grid;gap:2px;max-height:188px;overflow:auto;margin:8px 0;padding:6px;border:1px solid #3d566b;background:#0b1828;border-radius:4px}
+.guestbook-shell .anc-mentions button{display:block;width:100%;border-color:transparent;text-align:left;background:transparent;color:#c7dce9;min-height:44px}
+.guestbook-shell .anc-mentions button[aria-selected="true"]{border-color:#b49b64;background:#d2ac5e0e}
+.anc-trap,.anc-sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.anonymous-comments [hidden]{display:none!important}
+.anonymous-comments :is(input,textarea,button):focus-visible{outline:2px solid #a6e8ff;outline-offset:3px}
+@media(max-width:760px){.anc-form{padding:14px}.anc-fields{gap:8px}.anc-fields label{width:100%}.anc-counter{font-size:10px}.anc-submit-row{align-items:stretch;flex-direction:column;gap:10px}.anc-submit-row>button{width:100%}.anc-comment.anc-is-reply{margin-left:12px;padding-left:12px}.anc-comment-body,.anc-comment-actions{margin-left:0}.anc-author-meta{gap:2px 8px}.anc-avatar{width:42px;height:42px;flex-basis:42px}.anc-time{flex-basis:100%}.anc-replying{align-items:flex-start}.anc-replying button{padding:6px 8px!important;font-size:12px!important}}
+@media(prefers-reduced-motion:reduce){.anonymous-comments *{scroll-behavior:auto!important;transition:none!important}}

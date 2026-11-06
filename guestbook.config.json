@@ -6,5 +6,6 @@
   "discussionNumber": 1,
   "term": "星际留言簿 / Jiale Portfolio",
   "theme": "transparent_dark",
-  "badgeBaseURL": "https://jiale-shen-portfolio.surge.sh/assets/constellation-badges/"
+  "badgeBaseURL": "https://jiale-shen-portfolio.surge.sh/assets/constellation-badges/",
+  "apiBase": "https://jiale-shen-star-notes.weedytulip1.chatgpt.site"
 }

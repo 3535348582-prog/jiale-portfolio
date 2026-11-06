@@ -7,27 +7,34 @@
     </div>
     <div class="guestbook-shell">
       <details class="guestbook-identity" id="guestbookIdentity">
-        <summary><span data-gb-key="choose">为留言选一个星座签名</span><small data-gb-key="optional">可选</small></summary>
+        <summary><span data-gb-key="choose">为留言选一个星座图标</span><small data-gb-key="optional">可选</small></summary>
         <div class="guestbook-identity-body">
           <div class="guestbook-badge-preview" id="guestbookBadge" aria-live="polite"></div>
           <div class="guestbook-star-controls">
             <label for="guestbookZodiac" data-gb-key="yourStar">你的星座</label>
             <select id="guestbookZodiac"><option value="" data-gb-key="selectPrompt">选择一个喜欢的星座</option></select>
-            <p class="guestbook-quiet" data-gb-key="signatureHelp">复制后粘贴到评论开头，其他访客就能看到你的星座图标。</p>
-            <div class="guestbook-actions"><button type="button" id="guestbookCopyBadge" disabled data-gb-key="copy">复制星座签名</button><button type="button" id="guestbookSuggest" aria-controls="guestbookStarQuiz" aria-expanded="false" data-gb-key="suggest">帮我选一个</button></div>
-            <fieldset id="guestbookStarQuiz" hidden>
-              <legend data-gb-key="quizQuestion">这次你更想带走什么？</legend>
-              <div class="guestbook-quiz-options"><button type="button" data-gb-star="Leo" data-gb-key="quizLeo">创作的勇气</button><button type="button" data-gb-star="Vir" data-gb-key="quizVir">细节的秩序</button><button type="button" data-gb-star="Aqr" data-gb-key="quizAqr">新鲜的点子</button></div>
-            </fieldset>
-            <div class="guestbook-copy-fallback" id="guestbookCopyFallback" hidden><label for="guestbookSignature" data-gb-key="manualCopy">也可以选中下面的签名复制</label><textarea id="guestbookSignature" rows="3" readonly></textarea></div>
+            <p class="guestbook-quiet" data-gb-key="identityHelp">星座图标会自动随留言显示。未选择时会随机分配，也能随时更换。</p>
+            <div class="guestbook-actions"><button type="button" id="guestbookSuggest" data-gb-key="suggest">帮我选一个</button></div>
             <p id="guestbookIdentityStatus" class="guestbook-quiet" role="status"></p>
           </div>
         </div>
       </details>
-      <div class="guestbook-comments-top"><p data-gb-key="authHint">所有留言公开可见。登录 GitHub 后即可评论、回复、@ 他人或点赞。</p><a id="guestbookDiscussionLink" href="https://github.com/3535348582-prog/jiale-portfolio/discussions" target="_blank" rel="noopener noreferrer" data-gb-key="openDiscussion">在 GitHub 打开留言 ↗</a></div>
-      <div class="guestbook-load-state"><p id="guestbookStatus" role="status" data-gb-key="idle">滚动到这里后，留言会自动载入。</p><button id="guestbookLoad" type="button" data-gb-key="load">加载留言</button></div>
-      <div class="giscus" id="guestbookComments" aria-label="公开留言与回复"></div>
-      <noscript><p>请启用 JavaScript，或<a href="https://github.com/3535348582-prog/jiale-portfolio/discussions">前往 GitHub 查看与发表留言</a>。</p></noscript>
+      <div class="anonymous-comments" id="anonymousComments" aria-label="公开留言与回复">
+        <p class="anc-intro" data-anc-key="intro">无需注册，填写昵称就能留言。昵称和星座会随留言公开显示。</p>
+        <form id="anonymousCommentForm" class="anc-form">
+          <div class="anc-fields"><label for="anonymousNickname"><span data-anc-key="nickname">访客昵称（可选）</span><input id="anonymousNickname" name="nickname" maxlength="24" autocomplete="nickname" placeholder="星际旅人"></label><span class="anc-counter" id="anonymousCommentCount" aria-live="off">0 / 1000</span></div>
+          <div class="anc-replying" id="anonymousReplying" hidden><span id="anonymousReplyTarget"></span><button type="button" id="anonymousCancelReply" data-anc-key="cancelReply">取消回复</button></div>
+          <label class="anc-sr-only" for="anonymousCommentBody" data-anc-key="bodyLabel">留言内容</label>
+          <textarea id="anonymousCommentBody" name="body" maxlength="1000" rows="4" required placeholder="留下你的想法，也可以输入 @ 提及其他访客。" aria-describedby="anonymousCommentStatus" aria-controls="anonymousMentionList" aria-autocomplete="list"></textarea>
+          <div id="anonymousMentionList" class="anc-mentions" role="listbox" aria-label="提及访客" hidden></div>
+          <div class="anc-trap" aria-hidden="true"><label>Website<input id="anonymousWebsite" name="website" tabindex="-1" autocomplete="off"></label></div>
+          <div class="anc-submit-row"><span id="anonymousCommentStatus" class="anc-status" role="status"></span><button type="submit" id="anonymousCommentSubmit" data-anc-key="send">发送留言</button></div>
+        </form>
+        <div class="anc-list-heading"><h3 id="anonymousListTitle" data-anc-key="listTitle">星际留言</h3><button type="button" id="anonymousCommentRefresh" data-anc-key="refresh">刷新留言</button></div>
+        <div id="anonymousCommentFeed" class="anc-feed" aria-live="polite" aria-busy="false"></div>
+        <button type="button" id="anonymousCommentMore" class="anc-more" data-anc-key="more" hidden>查看更多留言</button>
+      </div>
+      <noscript><p>请启用 JavaScript 以查看和发表公开留言。 / Enable JavaScript to read and post public comments.</p></noscript>
     </div>
   </div>
 </section>

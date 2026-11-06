@@ -119,12 +119,14 @@ for marker, source, tag, closing in (
     ('MOBILE_READABILITY_SCRIPT', '_mobile_readability.js', 'script', '</body>'),
     ('GUESTBOOK_STYLE', '_guestbook.css', 'style', '</head>'),
     ('GUESTBOOK_SCRIPT', '_guestbook.js', 'script', '</body>'),
+    ('ANONYMOUS_COMMENTS_STYLE', '_anonymous_comments.css', 'style', '</head>'),
+    ('ANONYMOUS_COMMENTS_SCRIPT', '_anonymous_comments.js', 'script', '</body>'),
 ):
     template = re.sub(r'<!--__' + marker + r'__-->.*?<!--/__' + marker + r'__-->', '', template, flags=re.S)
     fragment = '<!--__' + marker + '__--><' + tag + '>' + (ROOT / source).read_text(encoding='utf-8') + '</' + tag + '><!--/__' + marker + '__-->'
     assert closing in template
     template = template.replace(closing, fragment + closing, 1)
-# Public discussions are loaded only near the guestbook; no credentials in this config.
+# Anonymous comments are loaded near the guestbook; config contains only the public API origin.
 guestbook_config=json.loads((ROOT/'guestbook.config.json').read_text(encoding='utf-8'))
 guestbook_config_tag='<script id="portfolioGuestbookConfig" type="application/json">'+json.dumps(guestbook_config,ensure_ascii=False).replace('</','<\\/')+'</script>'
 template=template.replace('</main>',(ROOT/'_guestbook.html').read_text(encoding='utf-8')+guestbook_config_tag+'</main>',1)

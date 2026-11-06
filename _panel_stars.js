@@ -31,54 +31,88 @@
       if(observer)observer.observe(card);else card.classList.add('is-gold-visible');
     });
 
+
     const fine=matchMedia('(hover:hover) and (pointer:fine)');
+    const smallScreen=matchMedia('(max-width:760px)');
+    const touchMode=()=>smallScreen.matches||!fine.matches;
     const states=new WeakMap();
-    let active=null;
-    function stop(){
-      if(active){active.card.classList.remove('is-star-active');clearTimeout(active.timer);active=null;}
+    let hovered=null;
+    const english=()=>document.documentElement.lang.startsWith('en');
+    function isPersistent(state){return state.manual==='shown'||(state.manual!=='hidden'&&state.seen);}
+    function isVisible(state){return state.manual!=='hidden'&&(isPersistent(state)||state.hovered||state.focused);}
+    function render(state){
+      const visible=isVisible(state),persistent=isPersistent(state),en=english();
+      state.card.classList.toggle('is-star-active',visible);
+      state.card.classList.toggle('is-star-pinned',persistent);
+      const action=persistent?'hide':visible?'pin':'show';
+      state.toggle.textContent=en?({hide:'Hide stars',pin:'Keep stars',show:'Show stars'})[action]:({hide:'隐藏星座',pin:'固定星座',show:'显示星座'})[action];
+      state.toggle.setAttribute('aria-pressed',String(persistent));
+      const name=en?state.constellation.en:state.constellation.zh;
+      state.toggle.setAttribute('aria-label',en?({hide:'Hide ',pin:'Keep ',show:'Show '})[action]+name+' constellation':({hide:'隐藏',pin:'固定',show:'显示'})[action]+name+'星座图');
     }
     function stateFor(card){
       if(states.has(card))return states.get(card);
-      const layer=document.createElement('div');layer.className='panel-star-interaction';layer.setAttribute('aria-hidden','true');
-      const scout=document.createElement('span');scout.className='panel-star-scout';
-      const c=assignments.get(card);
+      const c=assignments.get(card);if(!c)return null;
+      const layer=document.createElement('div');layer.className='panel-star-interaction';
+      const scout=document.createElement('span');scout.className='panel-star-scout';scout.setAttribute('aria-hidden','true');
+      scout.id='panelConstellation'+(cards.indexOf(card)+1);
       scout.innerHTML='<svg viewBox="0 0 190 150" focusable="false" aria-hidden="true">'+c.paths.map(path=>'<polyline pathLength="1" points="'+path.map(p=>p.join(',')).join(' ')+'"/>').join('')+c.points.map((p,i)=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(i===0?2.2:1.35)+'"/>').join('')+'</svg>';
       const label=document.createElement('span');label.className='panel-constellation-name';
       label.textContent=c.zh+' · '+c.en.toUpperCase();scout.append(label);
-      layer.append(scout);card.append(layer);
-      const state={card,scout,timer:0,mode:''};states.set(card,state);return state;
+      const toggle=document.createElement('button');toggle.type='button';toggle.className='panel-star-toggle';
+      toggle.setAttribute('aria-controls',scout.id);
+      layer.append(scout,toggle);card.append(layer);
+      const state={card,scout,toggle,constellation:c,manual:null,seen:false,hovered:false,focused:false};
+      states.set(card,state);
+      toggle.addEventListener('click',()=>{state.manual=isPersistent(state)?'hidden':'shown';render(state);});
+      render(state);return state;
     }
-    // Reserve every chart's own document-flow footer before any interaction.
-    // Text and links retain their original space; hovering never changes height.
+    // Each card keeps its own chart and manual choice. Only its own button hides it.
     cards.forEach(card=>{if(assignments.has(card))stateFor(card);});
-    function place(card,x,y,mode){
-      if(active?.card!==card){stop();active=stateFor(card);}
-      active.mode=mode;clearTimeout(active.timer);
-      active.card.classList.add('is-star-active');
-      if(mode==='touch')active.timer=setTimeout(stop,2200);
+    function remember(card){const state=states.get(card);if(!state)return;state.seen=true;render(state);}
+    function clearHover(){if(hovered){hovered.hovered=false;render(hovered);hovered=null;}}
+    function revealVisibleCards(){
+      if(!touchMode())return;
+      for(const card of cards){
+        if(!states.has(card))continue;
+        const rect=card.getBoundingClientRect();
+        if(rect.width&&rect.height&&rect.bottom>0&&rect.top<innerHeight)remember(card);
+      }
     }
+    if('IntersectionObserver' in window){
+      const charts=new IntersectionObserver(entries=>{
+        if(touchMode())for(const entry of entries)if(entry.isIntersecting)remember(entry.target);
+      },{threshold:0});
+      cards.forEach(card=>{if(states.has(card))charts.observe(card);});
+    }else if(touchMode())cards.forEach(card=>{if(states.has(card))remember(card);});
+    revealVisibleCards();
     document.addEventListener('pointermove',event=>{
-      if(event.pointerType==='touch'||!fine.matches)return;
-      const card=event.target.closest?.('.panel-constellation');
-      if(card)place(card,event.clientX,event.clientY,'pointer');
-      else if(active?.mode==='pointer')stop();
+      if(event.pointerType==='touch'||touchMode())return;
+      const card=event.target.closest?.('.panel-constellation'),state=card&&states.get(card);
+      if(state===hovered)return;
+      clearHover();
+      if(state){hovered=state;state.hovered=true;render(state);}
     },{passive:true});
     document.addEventListener('pointerdown',event=>{
       if(event.pointerType!=='touch')return;
-      const card=event.target.closest?.('.panel-constellation');
-      if(card)place(card,event.clientX,event.clientY,'touch');
+      const card=event.target.closest?.('.panel-constellation');if(card)remember(card);
     },{passive:true});
     document.addEventListener('focusin',event=>{
-      const card=event.target.closest?.('.panel-constellation');if(!card)return;
-      const r=event.target.getBoundingClientRect();place(card,r.left+r.width/2,r.top+r.height/2,'focus');
+      const card=event.target.closest?.('.panel-constellation'),state=card&&states.get(card);
+      if(state){state.focused=true;render(state);}
     });
     document.addEventListener('focusout',event=>{
-      if(active?.mode==='focus'&&!active.card.contains(event.relatedTarget))stop();
+      const card=event.target.closest?.('.panel-constellation'),state=card&&states.get(card);
+      if(state&&!card.contains(event.relatedTarget)){state.focused=false;render(state);}
     });
-    document.addEventListener('pointerout',event=>{if(!event.relatedTarget&&active?.mode==='pointer')stop();});
-    addEventListener('scroll',()=>{if(active?.mode!=='focus')stop();},{passive:true});
-    addEventListener('resize',stop,{passive:true});
-    document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+    document.addEventListener('pointerout',event=>{if(!event.relatedTarget)clearHover();});
+    // Scrolling clears a desktop hover preview, never an already revealed mobile chart.
+    addEventListener('scroll',clearHover,{passive:true});
+    addEventListener('resize',()=>{clearHover();revealVisibleCards();},{passive:true});
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)clearHover();});
+    fine.addEventListener('change',()=>{clearHover();revealVisibleCards();});
+    smallScreen.addEventListener('change',()=>{clearHover();revealVisibleCards();});
+    addEventListener('portfolio-language-change',()=>{cards.forEach(card=>{const state=states.get(card);if(state)render(state);});});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();
