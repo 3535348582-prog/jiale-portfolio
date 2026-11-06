@@ -44,3 +44,11 @@
 .anc-delete-prompt{flex-basis:100%;font-size:12px;line-height:1.7;color:#a9b9c8}
 .guestbook-shell .anc-comment-actions .anc-delete-confirm-button{border-color:#a28b59;color:#eed6a4}
 .anc-delete-confirm button:disabled{opacity:.55;cursor:wait}
+.anc-pinned{display:inline-flex;align-items:center;padding:2px 7px;border:1px solid #a78c5266;border-radius:20px;font-size:10px;line-height:1.6;color:#e0c58e;background:#bda05e0d}
+.anc-form[data-replying="true"]{margin:12px 0 18px 58px;border-color:#8d794b;background:#0a1827}
+@media(max-width:760px){.anc-form[data-replying="true"]{margin-left:12px}}
+.anc-name-field{min-width:0;flex:1}.anc-name-field>label{margin-bottom:8px}
+.anc-nickname-controls{display:flex;align-items:center;gap:8px;max-width:510px}.anc-nickname-controls input{flex:1;min-width:0}
+.guestbook-shell #anonymousIdentitySave{flex-shrink:0;min-height:44px;font-size:12px;border-color:#6b6653;color:#d8c596;background:#132230}
+.anc-identity-status{margin:8px 0 0;color:#93acbf;font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+@media(max-width:440px){.anc-nickname-controls{flex-wrap:wrap}.guestbook-shell #anonymousIdentitySave{min-width:118px}}
