@@ -4,8 +4,11 @@
   const root=document.getElementById('anonymousComments');if(!root||root.dataset.mounted)return;root.dataset.mounted='true';
   const $=id=>document.getElementById(id),form=$('anonymousCommentForm'),nickname=$('anonymousNickname'),body=$('anonymousCommentBody'),feed=$('anonymousCommentFeed'),status=$('anonymousCommentStatus'),submit=$('anonymousCommentSubmit'),refresh=$('anonymousCommentRefresh'),more=$('anonymousCommentMore'),mentions=$('anonymousMentionList');
   const formHome=form.parentNode,formNext=form.nextSibling;
+  const identitySave=$('anonymousIdentitySave'),identityStatus=$('anonymousIdentityStatus');let savingIdentity=false;
   const zh={intro:'无需注册，填写昵称就能留言。昵称和星座会随留言公开显示。',nickname:'访客昵称（可选）',bodyLabel:'留言内容',cancelReply:'取消回复',send:'发送留言',listTitle:'星际留言',refresh:'刷新留言',more:'查看更多留言',placeholder:'留下你的想法，也可以输入 @ 提及其他访客。',defaultName:'星际旅人',loading:'正在接收星际留言…',empty:'还没有留言。来留下第一颗星吧。',loadFailed:'留言暂时未能载入，请点击“刷新留言”重试。',sending:'正在发送…',sent:'留言已送达，其他访客也能看到。',sentRefresh:'留言已送达，列表刷新暂时失败，可稍后点击刷新。',error:'暂时未能完成，请稍后重试。',rate:'操作太频繁，请稍等一会儿再试。',unavailable:'留言服务暂时不可用，请稍后再试。',reply:'回复',replying:'正在回复 ',like:'点赞',liked:'已点赞',remove:'删除',confirmRemove:'确认删除',cancelRemove:'取消',deleted:'这条留言已由作者删除。',deleteConfirm:'删除自己的这条留言？已有回复会保留。',bodyRequired:'请先写下你的想法。',tooLong:'留言最多 1000 字，昵称最多 24 字。',moreFailed:'更多留言暂时未能载入，请重试。',mention:'提及访客'};
   const en={intro:'No account needed. Your nickname and constellation will appear with your public comment.',nickname:'Visitor nickname (optional)',bodyLabel:'Comment',cancelReply:'Cancel reply',send:'Send comment',listTitle:'Star notes',refresh:'Refresh',more:'Load more',placeholder:'Share a thought, or type @ to mention another visitor.',defaultName:'Star traveller',loading:'Receiving star notes…',empty:'No comments yet. Leave the first star.',loadFailed:'Comments could not be loaded. Select Refresh to try again.',sending:'Sending…',sent:'Your comment is public and visible to other visitors.',sentRefresh:'Your comment was saved, but the list could not refresh. Please refresh later.',error:'That could not be completed. Please try again.',rate:'Too many requests. Please wait a moment.',unavailable:'The comment service is temporarily unavailable.',reply:'Reply',replying:'Replying to ',like:'Like',liked:'Liked',remove:'Delete',confirmRemove:'Confirm delete',cancelRemove:'Cancel',deleted:'This comment was deleted by its author.',deleteConfirm:'Delete your comment? Existing replies will remain.',bodyRequired:'Write your thought first.',tooLong:'Comments can have up to 1000 characters; nicknames up to 24.',moreFailed:'More comments could not be loaded. Please retry.',mention:'Mention a visitor'};
+  Object.assign(zh,{saveIdentity:'保存发言信息',identitySaving:'正在保存…',identitySaved:'发言信息已保存。',identityRequired:'请先填写昵称，再保存发言信息。',identityHelp:'填写昵称并选择星座后可保存。',identityCurrent:'当前以 {name} · {star} 发言'});
+  Object.assign(en,{saveIdentity:'Save identity',identitySaving:'Saving…',identitySaved:'Your comment identity is saved.',identityRequired:'Enter a nickname before saving your identity.',identityHelp:'Enter a nickname and choose a constellation to save your identity.',identityCurrent:'Posting as {name} · {star}'});
   const english=()=>document.documentElement.lang.startsWith('en'),t=key=>(english()?en:zh)[key];
   let config={};try{config=JSON.parse($('portfolioGuestbookConfig')?.textContent||'{}');}catch{}
   const base=String(config.apiBase||'').replace(/\/+$/,'');
@@ -18,7 +21,11 @@
   function stars(){return identity()?.stars||[];}
   function starFor(id){return stars().find(s=>s.id===id);}
   function announce(key,kind=''){statusKey=key;statusKind=kind;status.textContent=t(key);status.dataset.kind=kind;}
-  function remember(){try{if(session)localStorage.setItem(storageKey,JSON.stringify(session));else localStorage.removeItem(storageKey);}catch{}}
+  function updateIdentityUI(){
+    if(identitySave){identitySave.textContent=t(savingIdentity?'identitySaving':'saveIdentity');identitySave.disabled=savingIdentity||pending;}
+    if(identityStatus){const star=starFor(session?.visitor.star);identityStatus.textContent=session?t('identityCurrent').replace('{name}',session.visitor.nickname).replace('{star}',star?(english()?star.en:star.zh):session.visitor.star):t('identityHelp');}
+  }
+  function remember(){try{if(session)localStorage.setItem(storageKey,JSON.stringify(session));else localStorage.removeItem(storageKey);}catch{}updateIdentityUI();}
   function errorText(error){return error?.status===429?'rate':error?.status===503?'unavailable':'error';}
   async function request(path,{method='GET',data,authenticated=false}={}){
     if(!base)throw Object.assign(new Error('Unconfigured'),{status:503});
@@ -35,6 +42,15 @@
     return session;
   }
   async function withSession(operation){try{await ensureSession();return await operation();}catch(error){if(error.status!==401)throw error;await ensureSession(true);return operation();}}
+  identitySave?.addEventListener('click',async()=>{
+    if(savingIdentity||pending)return;
+    if(!session&&!nickname.value.trim()){announce('identityRequired','error');nickname.focus();return;}
+    if(nickname.value.trim().length>24){announce('tooLong','error');return;}
+    savingIdentity=true;submit.disabled=true;nickname.readOnly=true;updateIdentityUI();
+    try{await withSession(()=>Promise.resolve(session));nickname.value='';announce('identitySaved','success');for(const item of items)if(item.author?.id===session.visitor.id)item.author={...session.visitor};render();}
+    catch(error){announce(errorText(error),'error');}
+    finally{savingIdentity=false;submit.disabled=false;nickname.readOnly=false;updateIdentityUI();}
+  });
   function el(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;}
   function button(label,handler,className=''){const node=el('button',className,label);node.type='button';node.addEventListener('click',handler);return node;}
   function avatar(starId){
@@ -112,15 +128,15 @@
     finally{loading=false;refresh.disabled=false;more.disabled=false;feed.setAttribute('aria-busy','false');}
   }
   form.addEventListener('submit',async event=>{
-    event.preventDefault();if(pending)return;const value=body.value.trim();if(!value){announce('bodyRequired','error');body.focus();return;}if(value.length>1000||nickname.value.trim().length>24){announce('tooLong','error');return;}
-    pending=true;submit.disabled=true;body.readOnly=true;nickname.readOnly=true;announce('sending');let saved=false;
+    event.preventDefault();if(pending||savingIdentity)return;const value=body.value.trim();if(!value){announce('bodyRequired','error');body.focus();return;}if(value.length>1000||nickname.value.trim().length>24){announce('tooLong','error');return;}
+    pending=true;submit.disabled=true;body.readOnly=true;nickname.readOnly=true;updateIdentityUI();announce('sending');let saved=false;
     try{await withSession(()=>request('/comments',{method:'POST',authenticated:true,data:{body:value,parentId:replyingTo?.id||null,website:$('anonymousWebsite').value}}));saved=true;body.value='';replyingTo=null;updateReply();closeMentions();count();announce('sent','success');try{await load();}catch{announce('sentRefresh','success');}}
-    catch(error){if(!saved)announce(errorText(error),'error');}finally{pending=false;submit.disabled=false;body.readOnly=false;nickname.readOnly=false;}
+    catch(error){if(!saved)announce(errorText(error),'error');}finally{pending=false;submit.disabled=false;body.readOnly=false;nickname.readOnly=false;updateIdentityUI();}
   });
   body.addEventListener('input',()=>{count();refreshMentions();});body.addEventListener('click',refreshMentions);
   body.addEventListener('keydown',event=>{if((event.ctrlKey||event.metaKey)&&event.key==='Enter'){event.preventDefault();form.requestSubmit();return;}if(mentions.hidden)return;if(event.key==='Escape'){event.preventDefault();closeMentions();return;}if(event.key==='ArrowDown'||event.key==='ArrowUp'){event.preventDefault();mentionIndex=(mentionIndex+(event.key==='ArrowDown'?1:-1)+mentionItems.length)%mentionItems.length;Array.from(mentions.children).forEach((option,index)=>option.setAttribute('aria-selected',String(index===mentionIndex)));body.setAttribute('aria-activedescendant','anonymousMention'+mentionIndex);}else if(event.key==='Enter'&&mentionItems.length){event.preventDefault();insertMention(mentionItems[mentionIndex].nickname);}});
   $('anonymousCancelReply').addEventListener('click',()=>{if(pending)return;replyingTo=null;updateReply();});refresh.addEventListener('click',()=>load().catch(()=>{}));more.addEventListener('click',()=>load(true).catch(()=>{}));
-  function language(){root.querySelectorAll('[data-anc-key]').forEach(node=>{node.textContent=t(node.dataset.ancKey);});nickname.placeholder='';body.placeholder=t('placeholder');mentions.setAttribute('aria-label',t('mention'));if(statusKey)announce(statusKey,statusKind);updateReply();count();if(items.length)render();}
+  function language(){root.querySelectorAll('[data-anc-key]').forEach(node=>{node.textContent=t(node.dataset.ancKey);});nickname.placeholder='';body.placeholder=t('placeholder');mentions.setAttribute('aria-label',t('mention'));if(statusKey)announce(statusKey,statusKind);updateReply();updateIdentityUI();count();if(items.length)render();}
   addEventListener('portfolio-language-change',language);language();
   if('IntersectionObserver' in window){observer=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting)){observer.disconnect();load().catch(()=>{});}},{rootMargin:'200px 0px'});observer.observe(root);}else load().catch(()=>{});
   window.portfolioAnonymousComments={refresh:()=>load(),getCount:()=>items.length};
