@@ -31,15 +31,15 @@ jobs:
           from pathlib import Path, PurePosixPath
           import hashlib, json, os, re, stat, urllib.request, zipfile
           root = Path.cwd().resolve()
-          expected_sha = '1c83c7743750a25cf4cc1fad8044d5a84e9f8b69f0506e2fa11b07c3d379365f'
-          expected_files = 65
-          expected_archive_bytes = 191469
-          expected_uncompressed_bytes = 742074
+          expected_sha = '8bacb19eee19feff44f55be4c21a782e1a0772c982473c178d2af691311b3870'
+          expected_files = 66
+          expected_archive_bytes = 992193
+          expected_uncompressed_bytes = 2471572
           source_url = 'https://jiale-shen-portfolio.surge.sh/portfolio-update.zip'
           manifest_url = 'https://jiale-shen-portfolio.surge.sh/portfolio-update.json'
           root_files = {'_panel_stars.js', '_panel_stars.css', '_guestbook.js',
               '_guestbook.html', '_guestbook.css', '_anonymous_comments.js',
-              '_anonymous_comments.css', 'guestbook.config.json', 'build_portfolio.py', 'README.md'}
+              '_anonymous_comments.css', 'guestbook.config.json', 'build_portfolio.py', 'README.md', 'template.html'}
           service_root_files = {'.gitignore', 'cloudflare-env.d.ts', 'drizzle.config.ts',
               'eslint.config.mjs', 'next.config.ts', 'package-lock.json', 'package.json',
               'postcss.config.mjs', 'README.md', 'tsconfig.json', 'vite.config.ts'}
@@ -150,7 +150,7 @@ jobs:
           if result.returncode == 0:
               print('The approved source update is already present.')
           else:
-              subprocess.run(['git','commit','-m','Add anonymous star notes and persistent constellations'], check=True)
+              subprocess.run(['git','commit','-m','Fix paused homepage texture and starfield repaint'], check=True)
               subprocess.run(['git','push','origin','HEAD:'+os.environ['GITHUB_REF_NAME']], check=True)
           PY
 
