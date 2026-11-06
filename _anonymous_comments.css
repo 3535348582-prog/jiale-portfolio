@@ -52,3 +52,5 @@
 .guestbook-shell #anonymousIdentitySave{flex-shrink:0;min-height:44px;font-size:12px;border-color:#6b6653;color:#d8c596;background:#132230}
 .anc-identity-status{margin:8px 0 0;color:#93acbf;font-size:12px;line-height:1.7;overflow-wrap:anywhere}
 @media(max-width:440px){.anc-nickname-controls{flex-wrap:wrap}.guestbook-shell #anonymousIdentitySave{min-width:118px}}
+@media(max-width:760px){.anc-fields{flex-wrap:wrap}.anc-name-field{flex-basis:100%}.anc-counter{margin-left:auto;padding-bottom:0}}
+@media(max-width:440px){.anc-nickname-controls input{flex-basis:100%}.guestbook-shell #anonymousIdentitySave{width:100%}}
