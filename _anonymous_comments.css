@@ -68,3 +68,24 @@
 @keyframes anc-owner-sheen{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 @media(max-width:440px){.guestbook-shell .anc-is-owner .anc-author-name{font-size:25px;letter-spacing:.06em}}
 @media(prefers-reduced-motion:reduce){.guestbook-shell .anc-is-owner .anc-author-name{animation:none;background-position:50% 50%}}
+
+/* Entry choice is visible in the initial HTML; no owner grant is cached. */
+.anc-entry-gate{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;box-sizing:border-box;padding:24px;background:radial-gradient(ellipse at 20% 16%,#34527466,transparent 48%),radial-gradient(ellipse at 90% 82%,#88734520,transparent 42%),#040b17ed;backdrop-filter:blur(16px);overflow:auto;overscroll-behavior:contain;color:#d9e8f5;font-family:var(--sans,"Microsoft YaHei",sans-serif)}
+.anc-entry-gate[hidden],.anc-entry-gate [hidden]{display:none!important}
+.anc-entry-card{width:min(100%,480px);box-sizing:border-box;padding:32px;border:1px solid #68829b66;border-radius:18px;background:linear-gradient(145deg,#243b5266,#0b182ae6 65%);box-shadow:0 24px 80px #0007,inset 0 1px #d5e5f522}
+.anc-entry-eyebrow{margin:0 0 18px;color:#ceb77f;font:10px/1.5 Consolas,monospace;letter-spacing:.22em}
+.anc-entry-card h2{margin:0 0 12px;color:#f1e7d1;font:500 clamp(22px,4.8vw,30px)/1.45 var(--serif,"Songti SC",serif);letter-spacing:.025em}
+.anc-entry-card p{font-size:13px;line-height:1.8;color:#a7bdd0}.anc-entry-card #entryIntro{margin-bottom:24px}
+.anc-entry-card button{box-sizing:border-box;min-height:46px;cursor:pointer;font:13px/1.6 var(--sans,"Microsoft YaHei",sans-serif);border:1px solid #526d86;border-radius:7px;background:#11263a;color:#d7e6f4;padding:10px 14px}
+.anc-entry-card button:disabled{cursor:wait;opacity:.55}.anc-entry-card button:not(:disabled):hover{border-color:#c3ab73;background:#294055}
+.anc-entry-card .anc-entry-option{width:100%;display:grid;gap:5px;text-align:left;margin:12px 0;padding:16px 18px;transition:background .2s,border-color .2s}
+.anc-entry-option strong{font-size:15px;font-weight:500}.anc-entry-option span{color:#96aec1;font-size:12px}.anc-entry-card .anc-entry-owner{border-color:#7c714e;background:#5f52231a}
+.anc-entry-card label{display:block;margin:20px 0 8px;color:#bccfdf;font-size:13px}.anc-entry-card input{box-sizing:border-box;display:block;width:100%;min-height:54px;border:1px solid #7b8d9e;border-radius:6px;background:#071421;color:#f7e6c3;font:24px/1.3 Consolas,monospace;letter-spacing:.35em;text-align:center;padding:10px 8px}
+.anc-entry-card #entryVerify{width:100%;border-color:#ba9f65;background:#8b73342b;color:#f4e2b8}.anc-entry-secondary{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px}.anc-entry-secondary button{flex:1;font-size:12px}
+.anc-entry-card .anc-entry-timer{min-height:24px;margin:8px 0;color:#cbb47c;font:12px/1.8 Consolas,monospace}.anc-entry-status{min-height:24px;margin:16px 0 4px;overflow-wrap:anywhere}.anc-entry-status[data-kind="error"]{color:#efb9a5}.anc-entry-status[data-kind="success"]{color:#b6d4b9}.anc-entry-card .anc-entry-safety{border-top:1px solid #63809a33;margin:18px 0 0;padding-top:15px;color:#7e98ad;font-size:11px}
+.anc-entry-note{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;margin:8px 0 18px}.anc-entry-note p{margin:0;color:#8ca6ba;font-size:12px;line-height:1.8}.guestbook-shell #anonymousIdentitySwitch{min-height:44px;font-size:12px;color:#b2c8db;background:transparent;border-color:#4a6074}
+.anc-entry-gate :is(input,button):focus-visible{outline:2px solid #b8eaff;outline-offset:3px}
+.anc-entry-card #entryOwnerKey{min-height:46px;text-align:left;letter-spacing:.05em;font:16px/1.5 var(--sans,"Microsoft YaHei",sans-serif);padding:10px 12px}.anc-entry-card .anc-entry-key-note{font-size:11px;color:#829aaf;margin:7px 0 15px}
+.anc-entry-gate{align-items:safe center}.anc-entry-send button{width:100%}
+@media(max-width:440px){.anc-entry-gate{padding:16px}.anc-entry-card{padding:24px 20px;border-radius:13px}.anc-entry-card .anc-entry-option{padding:14px}.anc-entry-secondary{flex-direction:column}.anc-entry-secondary button{width:100%}}
+@media(prefers-reduced-motion:reduce){.anc-entry-gate *{transition:none!important}}

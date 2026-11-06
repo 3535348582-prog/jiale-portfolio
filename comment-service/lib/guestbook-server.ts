@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import ownerProfiles from "./owner-profile-ids.json";
+import { OwnerAuthError, hasOwnerGrant, isKnownOwner, knownOwnerIds, requestOwnerCode, verifyOwnerCode } from "./owner-auth";
 
 const ORIGINS = new Set([
   "https://jiale-shen-portfolio.surge.sh",
@@ -10,16 +11,13 @@ const STARS = new Set(["Ari", "Tau", "Gem", "Cnc", "Leo", "Vir", "Lib", "Sco", "
 const SITE = "jiale-portfolio";
 const MAX_JSON = 8192;
 type StoredProfile = { id: string; nickname: string; star: string };
-type Profile = StoredProfile & { isOwner: boolean };
-// IDs are curated in server source. A public nickname or request flag never
-// grants owner status; authenticated calls must still prove the profile token.
-const OWNER_PROFILE_IDS = new Set<string>((ownerProfiles.profileIds as unknown[]).filter((id): id is string =>
-  typeof id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
-).map(id => id.toLowerCase()));
-function publicProfile(profile: StoredProfile): Profile {
-  const isOwner = OWNER_PROFILE_IDS.has(profile.id.toLowerCase());
-  return { id: profile.id, nickname: isOwner ? "沈佳乐" : profile.nickname,
-    star: isOwner ? "Leo" : profile.star, isOwner };
+type Profile = StoredProfile & { knownOwner: boolean; isOwner: boolean };
+function publicProfile(profile: StoredProfile, knownOwner: boolean, isOwner = knownOwner): Profile {
+  return { id: profile.id, nickname: knownOwner ? "沈佳乐" : profile.nickname,
+    star: knownOwner ? "Leo" : profile.star, knownOwner, isOwner };
+}
+function requireOwnerVerification(who: Profile) {
+  if (who.knownOwner && !who.isOwner) throw new ApiError(403, "owner_verification_required", "请先完成本次站主邮箱验证。");
 }
 type Row = { id: string; body: string; parent_id: string | null; created_at: number; deleted: number; author_id: string; nickname: string; star: string; likes: number; liked_by_me: number };
 export class ApiError extends Error {
@@ -40,7 +38,7 @@ function headers(request: Request) {
   const origin = request.headers.get("Origin");
   if (origin && ORIGINS.has(origin)) result.set("Access-Control-Allow-Origin", origin);
   result.set("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE,OPTIONS");
-  result.set("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  result.set("Access-Control-Allow-Headers", "Content-Type,Authorization,X-Owner-Grant");
   result.set("Access-Control-Expose-Headers", "Retry-After");
   result.set("Access-Control-Max-Age", "600");
   return result;
@@ -51,11 +49,11 @@ export async function handle(request: Request, action: () => Promise<unknown>, s
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: headers(request) });
     return new Response(JSON.stringify(await action()), { status, headers: headers(request) });
   } catch (error) {
-    const e = error instanceof ApiError ? error : new ApiError(500, "service_error", "留言服务暂时不可用，请稍后重试。");
+    const e = error instanceof ApiError || error instanceof OwnerAuthError ? error : new ApiError(500, "service_error", "留言服务暂时不可用，请稍后重试。");
     const responseHeaders = headers(request);
     if (e.retryAfter) responseHeaders.set("Retry-After", String(e.retryAfter));
-    if (!(error instanceof ApiError)) console.error("guestbook request failed", error instanceof Error ? error.message : "Unexpected error");
-    return new Response(JSON.stringify({ error: e.message, code: e.code }), { status: e.status, headers: responseHeaders });
+    if (!(error instanceof ApiError) && !(error instanceof OwnerAuthError)) console.error("guestbook request failed", error instanceof Error ? error.message : "Unexpected error");
+    return new Response(JSON.stringify({ error: e.message, code: e.code, ...(e.retryAfter ? { retryAfter: e.retryAfter } : {}) }), { status: e.status, headers: responseHeaders });
   }
 }
 export async function payload(request: Request) {
@@ -101,10 +99,20 @@ async function visitor(request: Request, required = true): Promise<Profile | nul
   if (!token) throw new ApiError(401, "visitor_required", "请先填写昵称，建立本机留言身份。");
   const profile = await db().prepare("SELECT id,nickname,star FROM profiles WHERE token_hash=?").bind(await hash(token)).first<StoredProfile>();
   if (!profile) throw new ApiError(401, "visitor_expired", "本机留言身份已失效，请重新填写昵称。");
-  return publicProfile(profile);
+  const knownOwner = await isKnownOwner(profile.id);
+  return publicProfile(profile, knownOwner, knownOwner && await hasOwnerGrant(request, profile.id));
 }
 export async function getSession(request: Request) {
   return { visitor: await visitor(request, false) };
+}
+export async function requestOwnerLoginCode(request: Request) {
+  const who = (await visitor(request))!, data = await payload(request);
+  if (["recipient", "to", "email", "mailbox"].some(key => key in data)) throw new ApiError(400, "invalid_owner_code_request", "验证码仅能发送到预设站主邮箱。");
+  return requestOwnerCode(request, who.id, data.ownerKey);
+}
+export async function verifyOwnerLoginCode(request: Request) {
+  const who = (await visitor(request))!, data = await payload(request);
+  return verifyOwnerCode(who.id, data);
 }
 export async function createSession(request: Request) {
   const data = await payload(request), nickname = cleanString(data.nickname, "nickname", 24), star = cleanStar(data.star);
@@ -119,28 +127,29 @@ export async function createSession(request: Request) {
     db().prepare("INSERT INTO profiles(id,token_hash,nickname,star,created_at,last_post_at) VALUES(?,?,?,?,?,0)").bind(profile.id, await hash(token), nickname, star, now),
     db().prepare("DELETE FROM session_limits WHERE hour<?").bind(hour - 24),
   ]);
-  return { token, visitor: publicProfile(profile) };
+  return { token, visitor: publicProfile(profile, false, false) };
 }
 export async function updateSession(request: Request) {
   const who = (await visitor(request))!, data = await payload(request);
+  requireOwnerVerification(who);
   const nickname = who.isOwner ? "沈佳乐" : data.nickname === undefined ? who.nickname : cleanString(data.nickname, "nickname", 24);
   const star = who.isOwner ? "Leo" : data.star === undefined ? who.star : cleanStar(data.star);
   await db().prepare("UPDATE profiles SET nickname=?,star=? WHERE id=?").bind(nickname, star, who.id).run();
-  return { visitor: publicProfile({ id: who.id, nickname, star }) };
+  return { visitor: publicProfile({ id: who.id, nickname, star }, who.knownOwner, who.isOwner) };
 }
 const COMMENT_SELECT = `SELECT c.id,c.body,c.parent_id,c.created_at,c.deleted,c.author_id,p.nickname,p.star,
  (SELECT COUNT(*) FROM reactions r WHERE r.comment_id=c.id AND r.active=1) AS likes,
  EXISTS(SELECT 1 FROM reactions r WHERE r.comment_id=c.id AND r.visitor_id=? AND r.active=1) AS liked_by_me
  FROM comments c JOIN profiles p ON p.id=c.author_id`;
-function output(row: Row) {
+function output(row: Row, owners: Set<string>) {
   const legacyGuests: Record<string, { nickname: string; star: string }> = ownerProfiles.legacyGuestComments;
   const guest = legacyGuests[row.id];
   // A known historical guest post shared a browser profile with the owner.
   // Preserve that post's original public attribution without changing authorship,
   // body, thread parent, reactions, or author-only write permissions.
   const author = guest
-    ? { id: row.author_id, nickname: guest.nickname, star: guest.star, isOwner: false }
-    : publicProfile({ id: row.author_id, nickname: row.nickname, star: row.star });
+    ? { id: row.author_id, nickname: guest.nickname, star: guest.star, knownOwner: false, isOwner: false }
+    : publicProfile({ id: row.author_id, nickname: row.nickname, star: row.star }, owners.has(row.author_id));
   return { id: row.id, body: row.deleted ? "" : row.body, parentId: row.parent_id, createdAt: row.created_at,
     author, likes: Number(row.likes), likedByMe: !!row.liked_by_me, deleted: !!row.deleted };
 }
@@ -161,10 +170,12 @@ export async function listComments(request: Request) {
   const rows = await db().prepare(visible + COMMENT_SELECT + " WHERE c.id IN (SELECT id FROM visible) AND (c.created_at<? OR (c.created_at=? AND c.id<?)) ORDER BY c.created_at DESC,c.id DESC LIMIT 101").bind(who?.id || "", before, before, beforeId).all<Row>();
   const page = rows.results.slice(0, 100), last = page.at(-1);
   const nextCursor = rows.results.length > 100 && last ? btoa(JSON.stringify({ at: last.created_at, id: last.id })) : null;
-  return { comments: page.reverse().map(output), nextCursor, visitor: who };
+  const owners = await knownOwnerIds(page.map(row => row.author_id));
+  return { comments: page.reverse().map(row => output(row, owners)), nextCursor, visitor: who };
 }
 export async function createComment(request: Request) {
   const who = (await visitor(request))!, data = await payload(request), body = cleanString(data.body, "body", 1000);
+  requireOwnerVerification(who);
   const parentId = data.parentId == null ? null : cleanString(data.parentId, "parent", 64);
   if (parentId && !(await db().prepare("SELECT id FROM comments WHERE id=? AND deleted=0").bind(parentId).first())) throw new ApiError(404, "parent_missing", "要回复的留言已不存在。");
   const now = Date.now();
@@ -173,7 +184,7 @@ export async function createComment(request: Request) {
   const id = crypto.randomUUID();
   await db().prepare("INSERT INTO comments(id,author_id,body,parent_id,created_at,deleted) VALUES(?,?,?,?,?,0)").bind(id, who.id, body, parentId, now).run();
   const row = await db().prepare(COMMENT_SELECT + " WHERE c.id=?").bind(who.id, id).first<Row>();
-  return { comment: output(row!) };
+  return { comment: output(row!, await knownOwnerIds([who.id])) };
 }
 export async function likeComment(request: Request, id: string) {
   const who = (await visitor(request))!; await payload(request);
@@ -186,6 +197,7 @@ export async function likeComment(request: Request, id: string) {
 }
 export async function deleteComment(request: Request, id: string) {
   const who = (await visitor(request))!;
+  requireOwnerVerification(who);
   const comment = await db().prepare("SELECT author_id FROM comments WHERE id=?").bind(id).first<{ author_id: string }>();
   if (!comment) throw new ApiError(404, "comment_missing", "这条留言已不存在。");
   if (comment.author_id !== who.id) throw new ApiError(403, "not_owner", "只能删除自己的留言。");

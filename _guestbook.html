@@ -1,3 +1,32 @@
+<div id="portfolioEntryGate" class="anc-entry-gate" role="dialog" aria-modal="true" aria-labelledby="entryTitle" aria-describedby="entryIntro">
+  <div class="anc-entry-card">
+    <p class="anc-entry-eyebrow" data-entry-key="entryEyebrow">JIALE / 星空入口</p>
+    <div id="entryChoice">
+      <h2 id="entryTitle" data-entry-key="entryTitle">欢迎来到这片星空。</h2>
+      <p id="entryIntro" data-entry-key="entryIntro">选一个身份，开始这次探索。</p>
+      <button type="button" id="entryGuest" class="anc-entry-option"><strong data-entry-key="entryGuest">以访客身份进入</strong><span data-entry-key="entryGuestHelp">直接浏览，也可以正常留言交流。</span></button>
+      <button type="button" id="entryOwner" class="anc-entry-option anc-entry-owner"><strong data-entry-key="entryOwner">我是站主，验证进入</strong><span data-entry-key="entryOwnerHelp">通过私密口令和邮箱验证码进入。</span></button>
+    </div>
+    <div id="entryOwnerPanel" hidden>
+      <h2 id="entryMailTitle" data-entry-key="entryMailTitle">验证站主身份</h2>
+      <p id="entryKeyHelp" data-entry-key="entryKeyHelp">口令正确后，才会向站主邮箱发送验证码。</p>
+      <label for="entryOwnerKey" data-entry-key="entryKeyLabel">站主私密口令</label>
+      <input id="entryOwnerKey" name="ownerKey" type="password" autocomplete="off" minlength="16" maxlength="128" aria-describedby="entryKeyHelp entryKeyResend" spellcheck="false">
+      <p id="entryKeyResend" class="anc-entry-key-note" data-entry-key="entryKeyResend">每次发送或重发都需填写口令，发送后会自动清空。</p>
+      <div class="anc-entry-send"><button type="button" id="entryResend" data-entry-key="entryRequest">发送验证码</button></div>
+      <p id="entryMailHint" data-entry-key="entryMailHint">验证码将发送至 353****582@qq.com，发送成功后 60 秒内有效。</p>
+      <form id="entryCodeForm" novalidate>
+        <label for="entryCode" data-entry-key="entryCodeLabel">邮箱验证码</label>
+        <input id="entryCode" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" aria-describedby="entryCodeTimer entryStatus" placeholder="000000">
+        <p id="entryCodeTimer" class="anc-entry-timer" aria-live="off"></p>
+        <button type="submit" id="entryVerify" disabled data-entry-key="entryVerify">验证并进入</button>
+      </form>
+      <div class="anc-entry-secondary"><button type="button" id="entryBack" data-entry-key="entryBack">返回身份选择</button></div>
+    </div>
+    <p id="entryStatus" class="anc-entry-status" role="status" aria-live="polite"></p>
+    <p class="anc-entry-safety" data-entry-key="entrySafety">页面内容仅由站主维护，访客可以正常留言交流。</p>
+  </div>
+</div>
 <section id="guestbook" class="section guestbook-section" aria-labelledby="guestbookTitle">
   <div class="wrap">
     <div class="guestbook-heading">
@@ -21,6 +50,7 @@
       </details>
       <div class="anonymous-comments" id="anonymousComments" aria-label="公开留言与回复">
         <p class="anc-intro" data-anc-key="intro">无需注册，填写昵称就能留言。昵称和星座会随留言公开显示。</p>
+        <div class="anc-entry-note"><p data-entry-key="entrySafety">页面内容仅由站主维护，访客可以正常留言交流。</p><button type="button" id="anonymousIdentitySwitch" data-entry-key="entrySwitch">切换进入身份</button></div>
         <form id="anonymousCommentForm" class="anc-form">
           <div class="anc-fields"><div class="anc-name-field"><label for="anonymousNickname"><span data-anc-key="nickname">访客昵称（可选）</span></label><div class="anc-nickname-controls"><input id="anonymousNickname" name="nickname" maxlength="24" autocomplete="off" placeholder="" aria-describedby="anonymousIdentityStatus"><button type="button" id="anonymousIdentitySave">保存发言信息</button></div><p id="anonymousIdentityStatus" class="anc-identity-status" role="status">填写昵称并选择星座后可保存。</p></div><span class="anc-counter" id="anonymousCommentCount" aria-live="off">0 / 1000</span></div>
           <div class="anc-replying" id="anonymousReplying" hidden><span id="anonymousReplyTarget"></span><button type="button" id="anonymousCancelReply" data-anc-key="cancelReply">取消回复</button></div>

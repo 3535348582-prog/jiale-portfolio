@@ -34,3 +34,31 @@ export const sessionLimits = sqliteTable("session_limits", {
   hour: integer("hour").notNull(),
   count: integer("count").notNull(),
 }, table => [primaryKey({ columns: [table.ipHash, table.hour] })]);
+
+export const ownerBindings = sqliteTable("owner_bindings", {
+  profileId: text("profile_id").primaryKey().references(() => profiles.id),
+  createdAt: integer("created_at").notNull(),
+  verifiedAt: integer("verified_at").notNull(),
+});
+export const ownerLoginCodes = sqliteTable("owner_login_codes", {
+  id: text("id").primaryKey(),
+  profileId: text("profile_id").notNull().references(() => profiles.id),
+  codeHash: text("code_hash").notNull(),
+  createdAt: integer("created_at").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+  ready: integer("ready", { mode: "boolean" }).notNull().default(false),
+  attempts: integer("attempts").notNull().default(0),
+  consumedAt: integer("consumed_at"),
+}, table => [index("owner_codes_profile_expiry_idx").on(table.profileId, table.expiresAt)]);
+export const ownerLoginGrants = sqliteTable("owner_login_grants", {
+  tokenHash: text("token_hash").primaryKey(),
+  profileId: text("profile_id").notNull().references(() => profiles.id),
+  createdAt: integer("created_at").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+}, table => [index("owner_grants_profile_expiry_idx").on(table.profileId, table.expiresAt)]);
+export const ownerLoginLimits = sqliteTable("owner_login_limits", {
+  scope: text("scope").notNull(),
+  windowStart: integer("window_start").notNull(),
+  count: integer("count").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+}, table => [primaryKey({ columns: [table.scope, table.windowStart] })]);
