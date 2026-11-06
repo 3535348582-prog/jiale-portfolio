@@ -31,10 +31,10 @@ jobs:
           from pathlib import Path, PurePosixPath
           import hashlib, json, os, re, stat, urllib.request, zipfile
           root = Path.cwd().resolve()
-          expected_sha = '8bacb19eee19feff44f55be4c21a782e1a0772c982473c178d2af691311b3870'
-          expected_files = 66
-          expected_archive_bytes = 992193
-          expected_uncompressed_bytes = 2471572
+          expected_sha = '38de61934b0f0d463da21fe04c935aad4fdb22857b9f2483613bf844567ce8fe'
+          expected_files = 67
+          expected_archive_bytes = 995605
+          expected_uncompressed_bytes = 2483153
           source_url = 'https://jiale-shen-portfolio.surge.sh/portfolio-update.zip'
           manifest_url = 'https://jiale-shen-portfolio.surge.sh/portfolio-update.json'
           root_files = {'_panel_stars.js', '_panel_stars.css', '_guestbook.js',
@@ -150,7 +150,7 @@ jobs:
           if result.returncode == 0:
               print('The approved source update is already present.')
           else:
-              subprocess.run(['git','commit','-m','Fix paused homepage texture and starfield repaint'], check=True)
+              subprocess.run(['git','commit','-m','Recognize the portfolio creator and preserve visitor attribution'], check=True)
               subprocess.run(['git','push','origin','HEAD:'+os.environ['GITHUB_REF_NAME']], check=True)
           PY
 
