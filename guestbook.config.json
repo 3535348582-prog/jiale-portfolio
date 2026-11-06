@@ -7,5 +7,6 @@
   "term": "星际留言簿 / Jiale Portfolio",
   "theme": "transparent_dark",
   "badgeBaseURL": "https://jiale-shen-portfolio.surge.sh/assets/constellation-badges/",
-  "apiBase": "https://jiale-shen-star-notes.weedytulip1.chatgpt.site"
+  "apiBase": "https://jiale-shen-star-notes.weedytulip1.chatgpt.site",
+  "pinnedCommentId": "4c96a9bd-e7e1-4a2e-871c-344ec2d7629a"
 }
