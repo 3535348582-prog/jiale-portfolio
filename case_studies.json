@@ -1,4 +1,96 @@
 {
+  "miniduck": {
+    "kind": "机器人学 · 小组课程项目",
+    "title": "MiniDuck 从零训练与部署仿真",
+    "period": "2026.11",
+    "status": "MuJoCo 3.6 仿真验收通过",
+    "subtitle": "从 PPO 步态训练到坡道控制和迷宫导航。",
+    "background": "在 MuJoCo 3.6 中建立双足步态训练与评测流程，测试机器人能否稳定上下坡、在坡脚恢复姿态，并走出含六段坡的封闭迷宫。",
+    "role": "参与步态策略训练、仿真验收和可复跑资料整理。",
+    "work": [
+      "从随机初始化的 PPO 试验开始，记录训练配置、检查点和策略筛选结果。",
+      "比较自动变速和坡脚恢复前后的动作表现，按固定条件复测。",
+      "整理独立百次坡道评测和三次迷宫评测的通过判定、轨迹与复跑说明。"
+    ],
+    "collaboration": "课程小组共同完成，AI 辅助实现、调试和评测记录核对。",
+    "metrics": [
+      {
+        "value": "100/100",
+        "unit": "",
+        "label": "10° 上下坡独立通过"
+      },
+      {
+        "value": "3/3",
+        "unit": "",
+        "label": "封闭迷宫通过"
+      },
+      {
+        "value": "52.46",
+        "unit": "秒",
+        "label": "10° 终点停稳用时中位数"
+      }
+    ],
+    "outcomes": [
+      "10° 上下坡独立试验 100/100 通过，0 摔倒、0 碰撞。每次越线停稳后完成 10 秒庆祝。",
+      "封闭迷宫 3/3 通过，每次均走完 5°–10° 六段坡并在出口庆祝。"
+    ],
+    "result": "10° 独立仿真评测 100/100 通过，封闭迷宫 3/3 通过。",
+    "value": "通过固定验收条件和逐次记录比较控制策略，形成可重复检查的仿真流程。",
+    "boundary": "结果来自 MuJoCo 3.6 仿真。真机安装、标定和真实场地感知属于独立验收范围。",
+    "cover": "miniduck-slope",
+    "coverFit": "cover",
+    "imageLabel": "坡道路线示意",
+    "imageAlt": "MiniDuck 10° 上坡、坡顶、下坡与终点的路线示意图",
+    "gallery": [],
+    "evidence": [
+      "预先固定的 100 个随机种子、逐次轨迹、机器人姿态和通过判定记录。",
+      "三次完整迷宫仿真与控制策略对比记录。"
+    ],
+    "dataNote": "100/100 与 3/3 来自两组独立仿真验收。时间为 10° 通过样本从起步到终点停稳的中位数。",
+    "en": {
+      "kind": "Robotics · Team Coursework",
+      "title": "MiniDuck: Training from Scratch & Deployment Simulation",
+      "period": "Nov 2026",
+      "status": "Validated in MuJoCo 3.6",
+      "subtitle": "From PPO gait training to slope control and maze navigation.",
+      "background": "We built a bipedal gait training and evaluation workflow in MuJoCo 3.6 to test slope traversal, recovery at slope exits and navigation through an enclosed maze with six ramps.",
+      "role": "Contributed to gait policy training, simulation validation and reproducibility documentation.",
+      "work": [
+        "Started with randomly initialized PPO trials and recorded the configurations, checkpoints and policy selection results.",
+        "Compared adaptive speed control and slope-exit recovery under matched test conditions.",
+        "Organized outcomes, trajectories and replay instructions for the 100 slope trials and three maze runs."
+      ],
+      "collaboration": "Completed as a coursework team, with AI assisting implementation, debugging and validation of the evaluation records.",
+      "metrics": [
+        {
+          "unit": "",
+          "label": "independent 10° slope trials passed"
+        },
+        {
+          "unit": "",
+          "label": "enclosed maze runs passed"
+        },
+        {
+          "unit": "s",
+          "label": "median time to stop at the finish"
+        }
+      ],
+      "outcomes": [
+        "Passed all 100 independent 10° ascent and descent trials with zero falls and zero collisions. In every trial the robot stopped after crossing the finish and celebrated for 10 seconds.",
+        "Completed all three enclosed maze runs, crossing six ramps from 5° to 10° and celebrating at the exit."
+      ],
+      "result": "Passed 100/100 independent 10° simulation trials and 3/3 enclosed maze runs.",
+      "value": "Compared controller behavior under fixed test conditions and retained trial-level records for reproducible simulation checks.",
+      "boundary": "Results were obtained in MuJoCo 3.6. Hardware installation, calibration and real-environment perception require separate validation.",
+      "imageLabel": "Slope course illustration",
+      "imageAlt": "Schematic of the MiniDuck 10-degree ascent, crest, descent and finish line",
+      "evidence": [
+        "A predefined set of 100 random seeds with trajectory, pose and pass records for each trial.",
+        "Three full maze simulations and controller comparison records."
+      ],
+      "dataNote": "The 100/100 and 3/3 results come from separate simulation checks. The median time measures the interval from the start to a stable stop at the finish in the successful 10° trials."
+    }
+  },
   "box": {
     "order": 6,
     "kind": "内容策划 · AI 协作",

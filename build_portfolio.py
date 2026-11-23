@@ -43,6 +43,7 @@ for video in videos:
     video['data'] = video['chapters'][0]['data'] if video['id']=='culture' else (heritage_host+video['filename'] if video['id']=='newvideo' else data(source, 'video/mp4'))
 
 projects = [
+ {'id':'miniduck', 'category':'course', 'title':'MiniDuck 从零训练与部署仿真', 'tags':['双足机器人','PPO','MuJoCo 3.6'], 'visual':'robotics'},
  {'id':'pga', 'category':'hardware', 'number':'01', 'kind':'本科毕业设计', 'title':'可编程增益放大器集成电路', 'subtitle':'以器件与电路原理为起点，理解偏置、放大和增益控制。', 'period':'2025.10 — 2026.06', 'status':'设计与仿真实践', 'tags':['110 nm CMOS','电路分析','初步仿真接触'], 'visual':'circuit',
   'background':'本科毕业设计围绕可编程增益放大器展开，在 110 nm CMOS 工艺背景下学习电路设计、仿真与版图检查。',
   'work':['分析偏置、放大及增益控制相关电路，整理原理图和模块连接。','在本科项目中初步接触 Cadence Virtuoso，进行 DC、AC 和瞬态仿真。','接触物理版图和 DRC/LVS 检查，整理设计、仿真及说明材料。'],
@@ -90,7 +91,7 @@ awards = [
  ['2023.11.19', '2023 年 · 第三届', '趣味数学建模知识竞赛 · 团队二等奖', '校级：北京理工大学（珠海）'],
 ]
 
-order = ['culture','pga','box','pet','notion','layout','radio','embedded']
+order = ['culture','miniduck','pga','box','pet','notion','layout','radio','embedded']
 projects.sort(key=lambda p: order.index(p['id']))
 for project in projects:
     if project['id'] == 'box':

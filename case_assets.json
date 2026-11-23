@@ -1,4 +1,8 @@
 {
+  "miniduck-slope": {
+    "file": "miniduck-slope.png",
+    "mime": "image/png"
+  },
   "box-cover": {
     "file": "box-cover.jpg",
     "mime": "image/jpeg"
