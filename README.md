@@ -6,10 +6,6 @@
 - 作者：沈佳乐（Jiale Shen）
 - 主要技术：HTML、CSS、原生 JavaScript、Three.js、Web Audio、Canvas、Python
 
-## 代表项目
-
-- [MiniDuck 从零训练与部署仿真](https://jiale-shen-portfolio.surge.sh/#projects)。机器人学课程小组项目，涵盖 PPO 步态训练、坡道控制与迷宫导航。MuJoCo 3.6 仿真中，10° 上下坡独立评测 100/100 通过，封闭迷宫 3/3 通过。
-
 ## 本地运行
 
 安装 Python 3.10 或以上版本。构建和预览只使用 Python 标准库：
