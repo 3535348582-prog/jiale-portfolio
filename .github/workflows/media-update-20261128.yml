@@ -22,13 +22,13 @@ jobs:
           python-version: '3.12'
       - name: Verify the approved source and media snapshot
         env:
-          EXPECTED_ARCHIVE_SHA: f7b9368cee1c6e2ec7ac936a9c59e97ba20fb08935cf13e7004426bae52fa299
+          EXPECTED_ARCHIVE_SHA: b454a6a916ec3b39c3d8f4207e7195a88545f4b260380b036d36bd1601d5fdb8
           EXPECTED_ARCHIVE_BYTES: '821812'
         run: |
           python - <<'PY'
           import hashlib,io,json,os,stat,urllib.request,zipfile
           from pathlib import Path,PurePosixPath
-          approved={'template.html': {'bytes': 1727896, 'sha256': 'a2f41280393bacc1ead09f57e1c35c6e977d771503db99d76ee21381a454b9c1'}, '_deck_feature.js': {'bytes': 15338, 'sha256': 'e992e1a32d60c90bef680d4329dfb9b68b35295eda7278483cec05dd044bc887'}}
+          approved={'template.html': {'bytes': 1727902, 'sha256': 'd1bf8d3010c13f1b6435873bc18cedec1aefe24028d37e26a668833732e05a83'}, '_deck_feature.js': {'bytes': 15338, 'sha256': 'e992e1a32d60c90bef680d4329dfb9b68b35295eda7278483cec05dd044bc887'}}
           url='https://jiale-shen-portfolio.surge.sh/portfolio-copy-update-20261128.zip'
           with urllib.request.urlopen(url,timeout=90) as response:
               data=response.read(64*1024*1024+1)
