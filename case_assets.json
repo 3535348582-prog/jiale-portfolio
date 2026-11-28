@@ -1,18 +1,18 @@
 {
   "box-cover": {
-    "file": "box-cover.jpg",
+    "file": "feint-cover.jpg",
     "mime": "image/jpeg"
   },
   "box-field": {
-    "file": "box-field.jpg",
+    "file": "feint-archive.jpg",
     "mime": "image/jpeg"
   },
   "box-bound": {
-    "file": "box-bound.jpg",
+    "file": "feint-card.jpg",
     "mime": "image/jpeg"
   },
   "box-closing": {
-    "file": "box-closing.jpg",
+    "file": "feint-listening.jpg",
     "mime": "image/jpeg"
   },
   "pet-cover": {

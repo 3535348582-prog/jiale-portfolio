@@ -67,7 +67,7 @@ def selftest():
     t.start()
     try:
         conn = http.client.HTTPConnection('127.0.0.1', port, timeout=10)
-        conn.request('GET', '/assets/box-showreel-original-voice.mp4', headers={'Range': 'bytes=100-199'})
+        conn.request('GET', '/assets/feint-solace-4k-web.mp4', headers={'Range': 'bytes=100-199'})
         resp = conn.getresponse()
         body = resp.read()
         print('status', resp.status)

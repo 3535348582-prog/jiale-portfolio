@@ -1,115 +1,118 @@
 {
   "box": {
     "order": 6,
-    "kind": "内容策划 · AI 协作",
-    "title": "《Box》AI 视觉叙事短片",
-    "period": "2026.10",
-    "status": "短片已交付 · 本页可播放",
-    "subtitle": "将多版本生成素材整理为一条连贯叙事，完成可播放的短片。",
-    "background": "围绕“时空之盒”组织一支个人创意短片。多次生成的画面有重复镜头、角色版本差异和不连贯的声音，需要先确定叙事顺序，再筛选可用素材。",
-    "role": "创意要求与内容评审：确定人物顺序、情绪对照、保留镜头和修改标准。",
+    "kind": "音乐影像 · AI 协作",
+    "title": "FEINT — INTO THE UNIVERSE",
+    "period": "2026.11",
+    "status": "34 秒成片 · 竖屏 4K",
+    "subtitle": "把聆听，展开成一座宇宙。",
+    "background": "从一副耳机里的《Solace》出发，沿着 Feint 的作品封面，走进一座由音乐构成的宇宙。封面在星海中翻转、汇聚，日常的聆听逐渐展开为一段关于记忆、探索与远方的视觉旅程。",
+    "role": "统筹创意方向、叙事节奏与成片反馈，将个人的音乐记忆转化为空间影像。",
     "work": [
-      "提出开盒、穿越、人物变化、合盒的叙事要求，并提供5个生成视频文件。",
-      "检查重复画面、转场和音画关系，要求删除扩大遮屏效果并多轮调整。",
-      "确定片尾使用“We shall see.”，继续校对交付内容。"
+      "以《Solace》为情绪线索，组织聆听场景、作品封面与宇宙空间之间的叙事关系。",
+      "围绕封面的翻转、汇聚和逐张回望，调整镜头节奏、空间层次与文字呈现。",
+      "完成竖屏成片整理，核对配乐、封面信息与最终发布版本。"
     ],
-    "collaboration": "AI 辅助整理分镜与提示词，筛选素材、执行剪辑与补帧，并完成文件检查。",
+    "collaboration": "作者确定概念、视觉方向和修改标准；AI 辅助动画实现、素材整理与技术检查。",
     "metrics": [
       {
-        "value": "15.5",
+        "value": "34.0",
         "unit": "秒",
-        "label": "交付短片"
+        "label": "完整成片"
       },
       {
-        "value": "4",
-        "unit": "段",
-        "label": "连续叙事"
+        "value": "4K",
+        "unit": "竖屏",
+        "label": "2160 × 3840"
       },
       {
-        "value": "48",
+        "value": "30",
         "unit": "fps",
-        "label": "运动补帧导出"
+        "label": "成片帧率"
       }
     ],
-    "result": "从5个输入文件中精选2个来源，完成4段叙事的720p短片；删除重复镜头并替换片尾台词。",
+    "result": "以音乐收藏为起点，将聆听、封面和星空组织成一段完整的个人音乐影像。",
     "outcomes": [
-      "交付1支1280 × 720、15.52秒短片，网页内可直接播放。",
-      "四段内容按开盒、穿越、人物变化和合盒组织，换镜采用短叠化。",
-      "片尾旧音频已清除，并插入英文台词“We shall see.”。"
+      "交付 34.03 秒、2160 × 3840、30 fps 的竖屏成片。",
+      "作品封面以独立卡片进入星空，汇聚后转入逐张回望。",
+      "网页使用同一发布版的 4K 播放文件，保留完整画面与原配乐。"
     ],
-    "value": "体现将创意要求转成可检查交付物、持续反馈并推进内容落地的能力。",
-    "boundary": "个人创意作品；48fps来自运动补帧，画面原始素材为AI生成。",
+    "value": "用视觉节奏承接音乐情绪，让个人兴趣形成有概念、有叙事、有完整交付的内容作品。",
+    "boundary": "个人音乐致意作品，非 Feint 官方宣传片。音乐：Feint & Laura Brehm — Solace；音乐与发行封面版权归相应权利人。",
     "cover": "box-cover",
-    "coverFit": "cover",
-    "imageLabel": "实际视频帧",
-    "imageAlt": "Box短片中法师打开时空之盒的实际画面",
+    "coverFit": "contain",
+    "imageLabel": "实际成片画面",
+    "imageAlt": "FEINT 成片中作品封面汇聚于星空，人物戴耳机聆听音乐",
     "gallery": [
       {
         "asset": "box-field",
-        "caption": "实际成片：荒野中的期待与失落"
+        "caption": "作品封面在星海中汇聚"
       },
       {
         "asset": "box-bound",
-        "caption": "实际成片：探索者从好奇到束缚"
+        "caption": "卡片翻面，回望音乐作品"
       },
       {
         "asset": "box-closing",
-        "caption": "实际成片：合盒收束"
+        "caption": "从宇宙回到日常的聆听"
       }
     ],
     "evidence": [
-      "最终视频文件与4段剪辑时间线",
-      "视频帧、编码及音轨替换检查记录"
+      "作者提供的 FEINT 4K 发布版成片",
+      "实际成片截图、视频编码与音轨校验"
     ],
-    "dataNote": "时长取最终文件；叙事段数取剪辑时间线；帧率为导出规格。",
+    "dataNote": "时长、画幅和帧率取自作者提供的最终文件；展示画面均来自实际成片。",
     "en": {
-      "title": "BOX: An AI-Assisted Visual Story",
-      "kind": "Content Planning · AI Collaboration",
-      "period": "Oct 2026",
-      "status": "Completed · Watch on this site",
-      "subtitle": "Shaped generated footage into a coherent, playable short film.",
-      "background": "A personal short film built around a box that travels through time and space. Multiple generated clips contained repeated shots, inconsistent character versions and mismatched audio; the narrative order and footage needed careful selection.",
-      "role": "Set the creative brief and reviewed the content, including character order, emotional contrast, selected shots and revision criteria.",
+      "title": "FEINT — INTO THE UNIVERSE",
+      "kind": "Music Film · AI Collaboration",
+      "period": "Nov 2026",
+      "status": "34-second film · Portrait 4K",
+      "subtitle": "A universe, unfolded from a single song.",
+      "background": "Beginning with Solace, Feint’s cover artworks unfold into a universe of their own. Rotating cards and a gathering archive carry the film from an intimate listening moment into a journey through memory, discovery and distant horizons.",
+      "role": "Creative direction, narrative pacing and editorial feedback, shaping a personal listening experience into a spatial film.",
       "work": [
-        "Defined the story sequence—opening the box, travelling, character changes and closing the box—and supplied five generated video files.",
-        "Reviewed repeated shots, transitions and audio-visual alignment; requested removal of the expanding-box screen transition and provided feedback through multiple revisions.",
-        "Chose “We shall see.” for the ending and reviewed the final deliverable."
+        "Connected the listening scene, release artwork and deep-space setting around the mood of Solace.",
+        "Refined the rhythm, depth and typography of rotating, converging and individually revisited cover cards.",
+        "Prepared the portrait release and checked its soundtrack, artwork information and final version."
       ],
-      "collaboration": "AI assisted with storyboard and prompt organisation, footage selection, editing, frame interpolation and file checks.",
+      "collaboration": "The author set the concept, visual direction and review criteria; AI assisted animation, asset organization and technical checks.",
       "metrics": [
         {
+          "value": "34.0",
           "unit": "sec",
-          "label": "final short film"
+          "label": "Complete film"
         },
         {
-          "unit": "parts",
-          "label": "story sequence"
+          "value": "4K",
+          "unit": "portrait",
+          "label": "2160 × 3840"
         },
         {
+          "value": "30",
           "unit": "fps",
-          "label": "interpolated export"
+          "label": "Frame rate"
         }
       ],
-      "result": "Selected footage from two of five supplied files to produce a four-part 720p film, removing repeated shots and replacing the closing line.",
+      "result": "A personal music film that brings listening, release artwork and a deep-space setting into one continuous visual journey.",
       "outcomes": [
-        "Delivered one 15.52-second, 1280 × 720 short film playable on this site.",
-        "Organised the story into four parts with short crossfades between shots.",
-        "Removed the old ending audio and added the English line “We shall see.”"
+        "A 34.03-second portrait film at 2160 × 3840 and 30 fps.",
+        "Independent cover cards gather in space before the film returns to individual releases.",
+        "The website presents the complete 4K release with its original soundtrack."
       ],
-      "value": "Shows how I translate a creative brief into a reviewable deliverable and refine it through feedback.",
-      "boundary": "A personal creative exercise. The source visuals were AI-generated; the 48 fps export uses frame interpolation.",
-      "dataNote": "Duration and frame rate are from the final file; the four narrative parts are counted from the edit.",
-      "imageLabel": "Frame from the finished film",
-      "imageAlt": "An actual frame from BOX showing a mage opening the box",
-      "gallery": [
-        "Finished film: anticipation and disappointment in the wilderness",
-        "Finished film: an explorer moves from curiosity to confinement",
-        "Finished film: the box closes"
+      "value": "Translates a personal interest into a focused concept, coherent narrative and finished creative work.",
+      "boundary": "A personal tribute, not an official Feint promotional film. Music: Feint & Laura Brehm — Solace. Music and release artwork belong to their respective rights holders.",
+      "imageLabel": "Actual film frame",
+      "imageAlt": "FEINT artwork gathering in a star field above a headphone-wearing listener",
+      "galleryCaptions": [
+        "Release artwork converges in deep space",
+        "A rotating card revisits a release",
+        "Returning from the universe to the listening room"
       ],
       "evidence": [
-        "Final video and four-part edit timeline",
-        "Checks of the video frames, encoding and replacement audio"
-      ]
+        "The author-supplied FEINT 4K release",
+        "Actual film frames and media validation"
+      ],
+      "dataNote": "Duration, resolution and frame rate are measured from the supplied final file. All displayed images are actual film frames."
     }
   },
   "culture": {

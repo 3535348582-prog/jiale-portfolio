@@ -768,8 +768,8 @@ html.pov-travelling .orbit-panel, html.pov-travelling .solar-toolbar, html.pov-t
 <div class="ai-gallery">
 <div class="gallery-head"><span>PROMPT → OUTPUT</span><span>AI VISUALS</span></div>
 <div class="gallery-track">
-<figure><img alt="AI 视觉叙事《Box》" data-case="box-cover"/><figcaption><b data-en="Put curiosity in a box" data-zh="把好奇装进盒子">把好奇装进盒子</b><span>BOX / AI VIDEO</span></figcaption></figure>
-<figure><img alt="《Box》荒野场景" data-case="box-field"/><figcaption><b data-en="Field, crossing, closing the box" data-zh="荒野、穿越、合盒">荒野、穿越、合盒</b><span>BOX / STORYBOARD</span></figcaption></figure>
+<figure><img alt="FEINT 音乐宇宙影像" data-case="box-cover"/><figcaption><b data-en="A universe, unfolded from a song" data-zh="把聆听，展开成一座宇宙">把聆听，展开成一座宇宙</b><span>FEINT / MUSIC FILM</span></figcaption></figure>
+<figure><img alt="FEINT 作品封面在星海中汇聚" data-case="box-field"/><figcaption><b data-en="Release artwork gathers in deep space" data-zh="封面、星海、聆听">封面、星海、聆听</b><span>FEINT / INTO THE UNIVERSE</span></figcaption></figure>
 <figure><img alt="熊猫角色团团" data-case="pet-cover"/><figcaption><b data-en="A panda wearing a GPT badge" data-zh="一只戴 GPT 徽记的熊猫">一只戴 GPT 徽记的熊猫</b><span>TUAN TUAN / AI ASSET</span></figcaption></figure>
 <figure><img alt="团团动作状态" data-case="pet-actions"/><figcaption><b data-en="9 states, 16 directions" data-zh="9 种状态，16 个朝向">9 种状态，16 个朝向</b><span>TUAN TUAN / SPRITE SHEET</span></figcaption></figure>
 </div>
@@ -1007,7 +1007,7 @@ html.pov-travelling .orbit-panel, html.pov-travelling .solar-toolbar, html.pov-t
 </div>
 </dialog>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
-<noscript>沈佳乐，香港中文大学 Robotics 硕士在读，本科电子科学与技术。关注半导体与硬件，作品包括电路课程实践、团团动画资产与《Box》视频原型。查看交互项目和视频需要启用 JavaScript。联系：3535348582@qq.com。</noscript>
+<noscript>沈佳乐，香港中文大学 Robotics 硕士在读，本科电子科学与技术。关注半导体与硬件，作品包括电路课程实践、团团动画资产与FEINT 音乐影像。查看交互项目和视频需要启用 JavaScript。联系：3535348582@qq.com。</noscript>
 <script>
 /*__PORTFOLIO_DATA__*/
 const $=id=>document.getElementById(id);
@@ -1832,11 +1832,11 @@ window.portfolioSolar={select,snap(i){selected=i;setMode('focus');updatePanel(i)
   const sections=[['#direction','01'],['#education','02'],['#projects','03'],['#videos','04'],['#awards','05'],['#experience','06'],['#journey','07'],['#contact','08']];sections.forEach(([selector,n])=>{const el=document.querySelector(selector+' .section-no');if(el)el.textContent=n});
   set('#earthView','地球视角','Earth');set('#systemView','太阳系全景','Solar system');set('#solarHint','拖动旋转 / 滚轮缩放 / 点击行星或太阳探索','Drag to rotate / scroll to zoom / select a planet');
  }
- const videoEn={ubt:{title:'Occupational Tension · Workplace Short',note:'UBTECH corporate culture internship short · AI animation on workplace stress and support',label:'Corporate Culture / New Media Internship'},box:{title:'Box · A visual story',note:'AI-assisted visual storytelling · 48 fps · Ending: We shall see.',label:'Creative short / edited sequence'},embedded:{title:'Touchscreen board · Full demonstration',note:'Unlock, gallery, music and video interface · Muted by default',label:'Real hardware / full demonstration'},culture:{title:'Cultural heritage · Interview video',note:'Full interview with a continuous timeline',label:'Community outreach / interview'},newvideo:{title:'Odyssey · Historical drama edit',note:'Historical drama edit · 46 sec · 4K restoration',label:'Video / narrative edit'}};
+ const videoEn={ubt:{title:'Occupational Tension · Workplace Short',note:'UBTECH corporate culture internship short · AI animation on workplace stress and support',label:'Corporate Culture / New Media Internship'},box:{title:'FEINT — INTO THE UNIVERSE',note:'A universe, unfolded from a single song. Release artwork gathers in deep space, carried by Solace.',label:'Music Film / A Journey Through Space'},embedded:{title:'Touchscreen board · Full demonstration',note:'Unlock, gallery, music and video interface · Muted by default',label:'Real hardware / full demonstration'},culture:{title:'Cultural heritage · Interview video',note:'Full interview with a continuous timeline',label:'Community outreach / interview'},newvideo:{title:'Odyssey · Historical drama edit',note:'Historical drama edit · 46 sec · 4K restoration',label:'Video / narrative edit'}};
  function updateVideos(){
   PORTFOLIO.videos.forEach((v,i)=>{const b=document.querySelector(`[data-video="${i}"]`),e=videoEn[v.id];if(!b)return;b.querySelector('strong').textContent=isEn()&&e?e.title:v.title;b.querySelector('small').textContent=isEn()&&e?e.label:v.label});
-  const v=PORTFOLIO.videos[videoIndex],e=videoEn[v.id];$('videoTitle').textContent=isEn()&&e?e.title:v.title;$('videoNote').textContent=isEn()&&e?e.note:v.note;const dur=isEn()?({ubt:'3m 58s',box:'15.5 sec',embedded:'73.5 sec',culture:'10m 04s',newvideo:'46 sec'}[v.id]||v.duration):v.duration;const res=isEn()?v.resolution.replace('竖屏','portrait'):v.resolution;const resLabel=v.sourceResolution?(isEn()?('web '+res+' · original '+v.sourceResolution):('网页 '+res+' · 原片 '+v.sourceResolution)):res;$('videoDuration').textContent=dur+' / '+resLabel;
-  const notes={ubt:tr('优必选企业文化组新媒体运营实习期间的短视频作品；AI 动画，讨论职业性紧张的表现与支持方式。','A short-form video from my UBTECH corporate culture internship, using AI animation to discuss workplace stress and support.'),box:tr('我负责创意方向、镜头顺序和修改反馈；AI辅助分镜与剪辑。','I directed the creative brief, shot order and feedback; AI assisted storyboarding and editing.'),embedded:tr('完整保留开发板操作顺序。默认静音，可在播放器开启原声。','The complete board demonstration retains its original sequence. Muted by default; sound can be enabled.'),culture:tr('非遗活动采访成片；我负责采访和剪辑。','Cultural heritage interview: I conducted interviews and edited the video.'),newvideo:tr('《奥德赛》古装剧情剪辑，4K 高清修复。','The Odyssey historical drama edit, restored in 4K.')};$('videoNotes').textContent=notes[v.id]||'';
+  const v=PORTFOLIO.videos[videoIndex],e=videoEn[v.id];$('videoTitle').textContent=isEn()&&e?e.title:v.title;$('videoNote').textContent=isEn()&&e?e.note:v.note;const dur=isEn()?({ubt:'3m 58s',box:'34.0 sec',embedded:'73.5 sec',culture:'10m 03s',newvideo:'46 sec'}[v.id]||v.duration):v.duration;const res=isEn()?v.resolution.replace('竖屏','portrait'):v.resolution;const resLabel=v.sourceResolution?(isEn()?('web '+res+' · original '+v.sourceResolution):('网页 '+res+' · 原片 '+v.sourceResolution)):res;$('videoDuration').textContent=dur+' / '+resLabel;
+  const notes={ubt:tr('优必选企业文化组新媒体运营实习期间的短视频作品；AI 动画，讨论职业性紧张的表现与支持方式。','A short-form video from my UBTECH corporate culture internship, using AI animation to discuss workplace stress and support.'),box:tr("从一副耳机里的《Solace》出发，沿着 Feint 的作品封面，走进一座由音乐构成的宇宙。封面在星海中翻转、汇聚，日常的聆听逐渐展开为一段关于记忆、探索与远方的视觉旅程。","Beginning with Solace, Feint’s cover artworks unfold into a universe of their own. Rotating cards and a gathering archive carry the film from an intimate listening moment into a journey through memory, discovery and distant horizons."),embedded:tr('完整保留开发板操作顺序。默认静音，可在播放器开启原声。','The complete board demonstration retains its original sequence. Muted by default; sound can be enabled.'),culture:tr('非遗活动采访成片；我负责采访和剪辑。','Cultural heritage interview: I conducted interviews and edited the video.'),newvideo:tr('《奥德赛》古装剧情剪辑，4K 高清修复。','The Odyssey historical drama edit, restored in 4K.')};$('videoNotes').textContent=notes[v.id]||'';
   const chapterTitle=document.getElementById('chaptersLabel');if(chapterTitle)chapterTitle.textContent=tr('完整视频 · 选择片段','Full video · Select chapter');
   document.querySelectorAll('[data-chapter]').forEach((b,i)=>{b.textContent=tr(`第${i+1}段`,`Part ${i+1}`)+' / '+b.dataset.range});
  }
@@ -2046,9 +2046,9 @@ window.portfolioSolar={select,snap(i){selected=i;setMode('focus');updatePanel(i)
       { v: '73', u: '格', zh: '动画有效帧', en: 'Animation frames' }
     ],
     videos: [
-      { v: '4', u: '支', zh: '视频作品', en: 'Videos' },
-      { v: '15.5', u: '秒', zh: '《Box》短片', en: 'Box short' },
-      { v: '10:03.6', u: '', zh: '非遗采访成片', en: 'Heritage film' },
+      { v: '5', u: '支', zh: '视频作品', en: 'Videos' },
+      { v: '34.0', u: '秒', zh: 'FEINT 音乐影像', en: 'FEINT music film' },
+      { v: '10:03.2', u: '', zh: '非遗采访成片', en: 'Heritage film' },
       { v: '73.5', u: '秒', zh: '开发板实录', en: 'Board demo' }
     ],
     awards: [

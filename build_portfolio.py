@@ -3,9 +3,9 @@ import base64, json, hashlib, shutil, re
 
 ROOT = Path(__file__).resolve().parent
 MEDIA = ROOT / 'media'
-SHOWREEL = MEDIA / 'box-showreel-original-voice.mp4'
+SHOWREEL = MEDIA / 'feint-solace-4k-web.mp4'
 ODYSSEY_4K = MEDIA / 'odyssey-4k-web.mp4'
-POSTER = MEDIA / 'box-opening.jpg'
+POSTER = ROOT / 'project-assets/feint-cover.jpg'
 
 def data(path, mime):
     p = Path(path)
@@ -22,16 +22,18 @@ assets = {
     'xiaowangye': data(ROOT/'project-assets'/'xiaowangye.png','image/png'),
 }
 videos = [
-    {'title': '《Box》时空之盒 · 连续叙事版', 'duration': '15.5 秒', 'durationSeconds': 15.52, 'note': 'AI 视觉叙事 · 48fps补帧 · 片尾：We shall see.',
-     'id':'box','filename':'box-showreel-original-voice.mp4','resolution':'1280 × 720','label':'AI视觉叙事 / 连续剪辑','poster':'box-cover','portrait':False,'muted':False,'path': SHOWREEL,
-     'cues':[{'t':0,'zh':'开盒 · 邀请','en':'Opening · invitation'},{'t':5.75,'zh':'穿越 · 荒野','en':'Crossing · the field'},{'t':9.33,'zh':'探索 · 束缚','en':'Search · bound'},{'t':12.08,'zh':'合盒 · 收束','en':'Closing the box'}]},
+    # Preserve the existing 'box' identity for project links; the displayed film is FEINT.
+    {'title':'FEINT — INTO THE UNIVERSE','duration':'34.0 秒','durationSeconds':34.033333,
+     'note':'把聆听，展开成一座宇宙。以《Solace》为线索，让作品封面在星海中翻转、汇聚。',
+     'id':'box','filename':'feint-solace-4k-web.mp4','resolution':'2160 × 3840 竖屏 · 4K','label':'音乐影像 / 宇宙叙事','poster':'box-cover','portrait':True,'muted':False,'path':SHOWREEL,
+     'cues':[{'t':0,'zh':'从聆听开始','en':'A listening moment'},{'t':8,'zh':'封面入轨','en':'Artwork enters orbit'},{'t':16,'zh':'星海汇聚','en':'An archive in deep space'},{'t':22,'zh':'回望作品','en':'Revisiting the releases'},{'t':32,'zh':'回到聆听','en':'Back to the listening room'}]},
     {'id':'embedded','title':'触屏开发板 · 完整实物操作','duration':'73.5 秒','durationSeconds':73.51,'note':'滑动解锁 / 相册 / 音乐与视频界面 · 默认静音，可开启原声','filename':'embedded-demo-full.mp4','resolution':'320 × 568 竖屏','label':'真实开发板 / 完整操作录像','poster':'embedded-demo-poster','portrait':True,'muted':True,'path': MEDIA/'embedded-demo-full.mp4','cues':[{'t':0,'zh':'完整操作 · 滑动解锁 / 相册 / 音乐 / 视频','en':'Full demo · unlock / gallery / music / video'}]},
 ]
 heritage_dir=MEDIA
-heritage_names=['heritage-clean-1.mp4','heritage-clean-2.mp4','heritage-clean-3.mp4']
+heritage_names=['heritage-intro-fixed-1.mp4','heritage-clean-2.mp4','heritage-clean-3.mp4']
 heritage_files=[heritage_dir/f'heritage-clean-{i}.mp4' for i in (1,2,3)]
 heritage_host='assets/'
-videos.append({'id':'culture','title':'非遗文化采访 · 完整视频','duration':'10:03.6','durationSeconds':603.62,'note':'本人参与采访与剪辑 · 完整成片分三段连续播放','filename':heritage_names[0],'resolution':'640 × 362','label':'非遗公益 / 采访成片','poster':'heritage-poster','portrait':False,'muted':False,'path':heritage_files[0], 'chapters':[{'data':heritage_host+name,'range':span} for name,span in zip(heritage_names,['00:00–03:21.2','03:21.2–06:42.4','06:42.4–10:03.6'])], 'chapterDurations':[201.22,201.20,201.20], 'offsets':[0,201.22,402.42], 'totalDuration':603.62, 'cues':[{'t':0,'zh':'第 1 段 · 00:00–03:21','en':'Part 1 · 00:00–03:21'},{'t':201.22,'zh':'第 2 段 · 03:21–06:42','en':'Part 2 · 03:21–06:42'},{'t':402.42,'zh':'第 3 段 · 06:42–10:03.6','en':'Part 3 · 06:42–10:03.6'}]})
+videos.append({'id':'culture','title':'非遗文化采访 · 完整视频','duration':'10:03.2','durationSeconds':603.233333,'note':'本人参与采访与剪辑 · 完整成片分三段连续播放','filename':heritage_names[0],'resolution':'640 × 362','label':'非遗公益 / 采访成片','poster':'heritage-poster','portrait':False,'muted':False,'path':heritage_files[0], 'chapters':[{'data':heritage_host+name,'range':span} for name,span in zip(heritage_names,['00:00–03:20.8','03:20.8–06:42.0','06:42.0–10:03.2'])], 'chapterDurations':[200.833333,201.20,201.20], 'offsets':[0,200.833333,402.033333], 'totalDuration':603.233333, 'cues':[{'t':0,'zh':'第 1 段 · 00:00–03:20.8','en':'Part 1 · 00:00–03:20.8'},{'t':200.833333,'zh':'第 2 段 · 03:20.8–06:42.0','en':'Part 2 · 03:20.8–06:42.0'},{'t':402.033333,'zh':'第 3 段 · 06:42.0–10:03.2','en':'Part 3 · 06:42.0–10:03.2'}]})
 videos.append({'id':'newvideo','title':'《奥德赛》古装剧情剪辑','duration':'46.1 秒','durationSeconds':46.10,'note':'古装剧情剪辑 · 46 秒 · 高清修复','filename':'odyssey-4k-web.mp4','resolution':'1440 × 1080','label':'视频作品 / 剧情剪辑','poster':'new-video-poster','portrait':False,'muted':False,'path':ODYSSEY_4K,'cues':[{'t':0,'zh':'《奥德赛》剧情片段','en':'Odyssey · historical drama'}]})
 videos.append({'id':'ubt','title':'《职业性紧张》职场情绪短片','duration':'3:57.8','durationSeconds':237.80,'note':'优必选企业文化组新媒体运营实习期间的短视频作品 · AI 动画，讨论职业性紧张的表现与支持方式','filename':'ubt-culture-short.mp4','resolution':'1440 × 810','sourceResolution':'960 × 544','label':'企业文化 / 新媒体运营实习','poster':'ubt-poster','portrait':False,'muted':False,'path': MEDIA/'ubt-culture-short.mp4','cues':[{'t':0,'zh':'开场 · 职业性紧张','en':'Opening · occupational stress'},{'t':90,'zh':'三个核心维度','en':'Three core dimensions'},{'t':150,'zh':'短暂放松','en':'A short break'},{'t':210,'zh':'员工支持方式','en':'Support at work'}]})
 video_order=['ubt','culture','box','newvideo','embedded']
@@ -61,11 +63,7 @@ projects = [
   'work':['我提出角色风格和视觉要求，并通过反馈调整表现。','AI 协助拆分动作状态，生成素材并整理到 8 列 × 11 行精灵图中。','保存逐格检查记录，核对布局、透明背景和空白格等资产要求。'],
   'result':'输出 1536 × 2288 的 RGBA 精灵图：9 类动作、16 个朝向、73 个有效帧。保存的本地校验记录无错误或警告；本页可以播放帧序列。',
   'boundary':'成果是动画资产及校验流程，不将其描述为自研动画引擎；本页演示为基于实际素材的帧序列播放。'},
- {'id':'box','category':'ai','number':'05','kind':'AI 协作 · 视频内容','title':'《Box》AI 视觉叙事与短片剪辑','subtitle':'从创意要求、分镜和反馈，走向可播放的视觉叙事作品。','period':'2026.10','status':'精选短片完成','tags':['分镜与提示词','素材筛选','剪辑交付'],'visual':'video',
-  'background':'个人创意练习，以时空之盒串联不同角色的好奇、失落与束缚，与 AI 协作迭代镜头要求和视觉素材。',
-  'work':['我确定主题、人物顺序、情绪对照和修改要求，通过多轮反馈调整生成内容。','AI 辅助整理分镜与生成提示词，筛选可用镜头，并用 FFmpeg 完成裁切、拼接、音频衔接和编码。','从五个素材文件中筛选连续镜头，删除重复伸手、替代人物版本与多余回场，用四个叙事段落完成开盒、穿越、人物变化和合盒。'],
-  'result':'完成 15.5 秒、1280 × 720、经运动补帧后 48fps 导出的 H.264 / AAC 连续叙事短片，保留对应原声；输出文件通过全片解码和抽帧检查。',
-  'boundary':'AI 生成素材的个人创作练习；本页展示已完成的精选剪辑，不将其表述为商业投放项目。'},
+ {'id':'box','category':'ai','number':'05','kind':'音乐影像 · AI 协作','title':'FEINT — INTO THE UNIVERSE','subtitle':'把聆听，展开成一座宇宙。','period':'2026.11','status':'34 秒成片 · 竖屏 4K','tags':['音乐叙事','空间动画','封面汇聚'],'visual':'video'},
  {'id':'notion','category':'ai','number':'06','kind':'AI 协作 · 工作流','title':'学习与求职任务管理工作流','subtitle':'把课件、截止日期和实际进度整理为能持续调整的任务。','period':'2026.10','status':'计划已写入 Notion','tags':['资料整理','任务拆解','工具连接'],'visual':'workflow',
   'background':'硕士课程复习、作业与求职安排并行，需要将零散信息整理成具体任务。',
   'work':['我提供课程资料、时间约束、理解难点与实际进度，并确认优先级。','AI 辅助抽取事项、拆分知识点与例题、安排阶段任务，并写入 Notion。','通过多轮反馈修正日期和任务范围，将已确认信息与待核实事项区分。'],
