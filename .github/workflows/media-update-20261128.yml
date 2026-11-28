@@ -1,0 +1,81 @@
+name: Update FEINT and heritage videos
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/media-update-20261128.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: portfolio-video-media-update
+  cancel-in-progress: false
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify the approved source and media snapshot
+        env:
+          EXPECTED_ARCHIVE_SHA: aa539cde78c7553ed7e718869f52dc62b93b3ca7e9f0c30b89395de86872c396
+          EXPECTED_ARCHIVE_BYTES: '40382163'
+        run: |
+          python - <<'PY'
+          import hashlib,io,json,os,stat,urllib.request,zipfile
+          from pathlib import Path,PurePosixPath
+          approved={'build_portfolio.py': {'bytes': 21927, 'sha256': '357aaa612983a2950707c1272a7904097607612eba1f57d3633a9810f8fffc20'}, 'template.html': {'bytes': 1727824, 'sha256': '18f136a8df16b2ea88aad173a51f07db11ae3e480c571ea030cb3f931f94b4ac'}, 'personal.js': {'bytes': 17221, 'sha256': '107cfe24d151faab9fa935de3e99a5a74cb5afc5e7470435076e0d6a3d441b69'}, 'case_studies.json': {'bytes': 44426, 'sha256': '5d3493acf4f551fa0f0d450a65d8dd509960714a652d6feb4309ca890d0dab28'}, 'case_assets.json': {'bytes': 3887, 'sha256': 'a51b65c260791f50d061c891e0c2705c8d1e658a4443fb59201bf4a6f6c6e70d'}, 'README.md': {'bytes': 3644, 'sha256': '0cfe2ea77a94c7520815452a5bb48d76bc111454cc0f8d9872123039a9d24d09'}, 'THIRD_PARTY_NOTICES.md': {'bytes': 1592, 'sha256': '0aca582f8fe9867381b7e21e237b13b8e32cd67e94ea338cd215d0ecf28d2122'}, 'serve_range.py': {'bytes': 3819, 'sha256': '4b92b4c7cfcbac12945c98a392a99d951b456ddbbcdbfddbf7a4b98b826315b6'}, 'media/feint-solace-4k-web.mp4': {'bytes': 22926063, 'sha256': '76d93c73116ce117e73bd7eb4f88cbbbd84a26821fadf4e2da1baeec00ecbbe1'}, 'media/heritage-clean-1.mp4': {'bytes': 16219131, 'sha256': '807e4585ce930cdc26a34d1a7aff8efea9ad197f8d571b22af29486212593409'}, 'project-assets/feint-cover.jpg': {'bytes': 274736, 'sha256': '04028a3aa87f3c0de7d355c5110b7535ffad169b4ebd77dc200d7f76b46eb197'}, 'project-assets/feint-archive.jpg': {'bytes': 131972, 'sha256': '24951e974bf6be46b7982e6ec7d30267801371d137b4129d220e71e28142dc8b'}, 'project-assets/feint-card.jpg': {'bytes': 81198, 'sha256': 'c4bf847ab4632ee64cc91bd4413874fa104770b94f1f39dd860fed1fed986215'}, 'project-assets/feint-listening.jpg': {'bytes': 95106, 'sha256': 'f87db7e6a46855deda85bb7673dccf37b6f86c7fd25523937929de52d8d65034'}}
+          url='https://jiale-shen-portfolio.surge.sh/portfolio-media-update-20261128.zip'
+          with urllib.request.urlopen(url,timeout=90) as response:
+              data=response.read(64*1024*1024+1)
+          assert len(data)==int(os.environ['EXPECTED_ARCHIVE_BYTES'])
+          assert hashlib.sha256(data).hexdigest()==os.environ['EXPECTED_ARCHIVE_SHA']
+          root=Path.cwd().resolve()
+          with zipfile.ZipFile(io.BytesIO(data)) as archive:
+              entries=archive.infolist()
+              assert len(entries)==len(approved) and len({e.filename for e in entries})==len(entries)
+              assert {e.filename for e in entries}==set(approved)
+              contents={}
+              for e in entries:
+                  p=PurePosixPath(e.filename)
+                  assert not p.is_absolute() and not any(x in ('..','.','') for x in p.parts)
+                  assert not e.is_dir() and not stat.S_ISLNK(e.external_attr>>16)
+                  assert e.file_size==approved[e.filename]['bytes'] and e.file_size<100*1024*1024
+                  dest=root.joinpath(*p.parts)
+                  assert root in dest.resolve().parents and not dest.is_symlink()
+                  assert not any(parent.is_symlink() for parent in dest.parents if root in parent.parents)
+                  content=archive.read(e)
+                  assert hashlib.sha256(content).hexdigest()==approved[e.filename]['sha256']
+                  contents[e.filename]=content
+              for name,content in contents.items():
+                  dest=root/name;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+          (Path(os.environ['RUNNER_TEMP'])/'approved-video-paths.json').write_text(json.dumps(sorted(approved)))
+          print('Verified and applied',len(approved),'approved files.')
+          PY
+      - name: Build the complete portfolio
+        run: python build_portfolio.py
+      - name: Commit only the approved changes
+        run: |
+          python - <<'PY'
+          import json,os,subprocess
+          from pathlib import Path
+          paths=json.loads((Path(os.environ['RUNNER_TEMP'])/'approved-video-paths.json').read_text())
+          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+          subprocess.run(['git','add','--',*paths],check=True)
+          staged=subprocess.check_output(['git','diff','--cached','--name-only','-z']).decode().split(chr(0))
+          assert set(filter(None,staged)).issubset(paths)
+          result=subprocess.run(['git','diff','--cached','--quiet'])
+          assert result.returncode in (0,1)
+          if result.returncode:
+              subprocess.run(['git','commit','-m','Replace BOX with FEINT 4K film and smooth heritage introduction'],check=True)
+              subprocess.run(['git','push','origin','HEAD:main'],check=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-dist
+          path: dist
