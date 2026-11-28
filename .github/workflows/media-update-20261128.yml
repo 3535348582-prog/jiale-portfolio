@@ -22,14 +22,14 @@ jobs:
           python-version: '3.12'
       - name: Verify the approved source and media snapshot
         env:
-          EXPECTED_ARCHIVE_SHA: aa539cde78c7553ed7e718869f52dc62b93b3ca7e9f0c30b89395de86872c396
-          EXPECTED_ARCHIVE_BYTES: '40382163'
+          EXPECTED_ARCHIVE_SHA: f7b9368cee1c6e2ec7ac936a9c59e97ba20fb08935cf13e7004426bae52fa299
+          EXPECTED_ARCHIVE_BYTES: '821812'
         run: |
           python - <<'PY'
           import hashlib,io,json,os,stat,urllib.request,zipfile
           from pathlib import Path,PurePosixPath
-          approved={'build_portfolio.py': {'bytes': 21927, 'sha256': '357aaa612983a2950707c1272a7904097607612eba1f57d3633a9810f8fffc20'}, 'template.html': {'bytes': 1727824, 'sha256': '18f136a8df16b2ea88aad173a51f07db11ae3e480c571ea030cb3f931f94b4ac'}, 'personal.js': {'bytes': 17221, 'sha256': '107cfe24d151faab9fa935de3e99a5a74cb5afc5e7470435076e0d6a3d441b69'}, 'case_studies.json': {'bytes': 44426, 'sha256': '5d3493acf4f551fa0f0d450a65d8dd509960714a652d6feb4309ca890d0dab28'}, 'case_assets.json': {'bytes': 3887, 'sha256': 'a51b65c260791f50d061c891e0c2705c8d1e658a4443fb59201bf4a6f6c6e70d'}, 'README.md': {'bytes': 3644, 'sha256': '0cfe2ea77a94c7520815452a5bb48d76bc111454cc0f8d9872123039a9d24d09'}, 'THIRD_PARTY_NOTICES.md': {'bytes': 1592, 'sha256': '0aca582f8fe9867381b7e21e237b13b8e32cd67e94ea338cd215d0ecf28d2122'}, 'serve_range.py': {'bytes': 3819, 'sha256': '4b92b4c7cfcbac12945c98a392a99d951b456ddbbcdbfddbf7a4b98b826315b6'}, 'media/feint-solace-4k-web.mp4': {'bytes': 22926063, 'sha256': '76d93c73116ce117e73bd7eb4f88cbbbd84a26821fadf4e2da1baeec00ecbbe1'}, 'media/heritage-clean-1.mp4': {'bytes': 16219131, 'sha256': '807e4585ce930cdc26a34d1a7aff8efea9ad197f8d571b22af29486212593409'}, 'project-assets/feint-cover.jpg': {'bytes': 274736, 'sha256': '04028a3aa87f3c0de7d355c5110b7535ffad169b4ebd77dc200d7f76b46eb197'}, 'project-assets/feint-archive.jpg': {'bytes': 131972, 'sha256': '24951e974bf6be46b7982e6ec7d30267801371d137b4129d220e71e28142dc8b'}, 'project-assets/feint-card.jpg': {'bytes': 81198, 'sha256': 'c4bf847ab4632ee64cc91bd4413874fa104770b94f1f39dd860fed1fed986215'}, 'project-assets/feint-listening.jpg': {'bytes': 95106, 'sha256': 'f87db7e6a46855deda85bb7673dccf37b6f86c7fd25523937929de52d8d65034'}}
-          url='https://jiale-shen-portfolio.surge.sh/portfolio-media-update-20261128.zip'
+          approved={'template.html': {'bytes': 1727896, 'sha256': 'a2f41280393bacc1ead09f57e1c35c6e977d771503db99d76ee21381a454b9c1'}, '_deck_feature.js': {'bytes': 15338, 'sha256': 'e992e1a32d60c90bef680d4329dfb9b68b35295eda7278483cec05dd044bc887'}}
+          url='https://jiale-shen-portfolio.surge.sh/portfolio-copy-update-20261128.zip'
           with urllib.request.urlopen(url,timeout=90) as response:
               data=response.read(64*1024*1024+1)
           assert len(data)==int(os.environ['EXPECTED_ARCHIVE_BYTES'])
